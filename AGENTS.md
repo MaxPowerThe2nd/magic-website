@@ -17,7 +17,7 @@ All documentation is written in English: instruction files, commit messages, cod
 After each approved step, commit the changes with a short, clear English commit message. Finished design states get a tag (design-v1, design-v2, ...). Alternative design variants are tried on separate branches; the main branch stays untouched until a variant is approved. Never reset, revert, switch branches, delete branches or tags, or rewrite history without explicit instruction.
 
 # Images
-Web images live in /images inside the project. Original photos are never stored in the project; they stay outside the repository. Every image added to /images is resized and compressed for the web first, with smaller variants for mobile (mobile first, responsive images via srcset). File names are lowercase English words separated by hyphens, no spaces or special characters.
+Web images live in /src/images inside the project, so Astro can optimize them. Original photos are never stored in the project; they stay outside the repository. Every image added to /src/images is resized and compressed to a web-ready size first; Astro then generates the smaller variants for mobile and modern formats (mobile first, responsive images via srcset and sizes). File names are lowercase English words separated by hyphens, no spaces or special characters.
 
 ## Development
 
