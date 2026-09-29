@@ -1,17 +1,86 @@
 ---
-
+import { Picture } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import profilePic from '../images/home-profilepic.webp';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Hütter Entertainment" overlayHeader>
+	<section class="hero">
+		<div class="banner">
+			<Picture
+				src={profilePic}
+				alt="Zauberkünstler im dunklen Anzug mit Zauberstab und aufgefächerten Spielkarten"
+				formats={['avif', 'webp']}
+				fallbackFormat="webp"
+				widths={[400, 800, 1254]}
+				sizes="(min-width: 720px) 640px, calc(100vw - 2rem)"
+				loading="eager"
+				fetchpriority="high"
+			/>
+			<h1>Hütter Entertainment</h1>
+		</div>
+	</section>
+
+	<section class="about">
+		<h2>About</h2>
+		<p>
+			Seien Sie gegrüßt! Sie suchen magische Unterhaltung für einen geschäftlichen oder
+			persönlichen Anlass? Dann sind Sie hier genau richtig.
+		</p>
+		<p>
+			Seit 10 Jahren begeistere ich als Zauberkünstler mein Publikum. Mein Schwerpunkt ist
+			hautnahe Magie, direkt vor Ihren Augen und in Ihren Händen. Ebenso gestalte ich Shows im
+			Salonstil für kleinere und mittlere Gesellschaften.
+		</p>
+		<p>
+			Für Restaurants, Empfänge und Feiern biete ich Walking Acts von Tisch zu Tisch, das
+			sogenannte „Table Hopping“: Ihre Gäste erleben Zauberei in entspannter Atmosphäre, ganz
+			ohne Bühne.
+		</p>
+		<a class="button" href="/kontakt">Anfragen</a>
+	</section>
+</Layout>
+
+<style>
+	/* Blue glow on deep navy, matching the photo background */
+	.hero {
+		/* Top padding leaves room for the menu lying over this section */
+		padding: 4rem 1rem 2.5rem;
+		background: radial-gradient(
+			ellipse at 50% 45%,
+			var(--color-blue) 0%,
+			var(--color-navy) 45%,
+			var(--color-night) 80%
+		);
+	}
+
+	.banner {
+		max-width: 640px;
+		margin: 0 auto;
+		border-radius: var(--radius);
+		overflow: hidden;
+		background: var(--color-night);
+		box-shadow: 0 12px 40px rgb(0 0 0 / 0.5);
+	}
+
+	.banner h1 {
+		margin: 0;
+		padding: 0.875rem 1rem 1rem;
+		text-align: center;
+		color: var(--color-gold);
+	}
+
+	.about {
+		max-width: 640px;
+		margin: 0 auto;
+		padding: 2.5rem 1rem 3rem;
+	}
+
+	.about h2 {
+		margin: 0 0 0.75rem;
+	}
+
+	.about .button {
+		margin-top: 1rem;
+	}
+</style>
