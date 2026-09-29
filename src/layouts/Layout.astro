@@ -1,14 +1,11 @@
 ---
-import '@fontsource-variable/playfair-display';
-import '@fontsource-variable/source-sans-3';
+import { Font } from 'astro:assets';
 
 interface Props {
 	title: string;
-	/** Lay the menu over the page's own dark top section instead of a solid bar */
-	overlayHeader?: boolean;
 }
 
-const { title, overlayHeader = false } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <html lang="de">
@@ -19,17 +16,10 @@ const { title, overlayHeader = false } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
+		<Font cssVariable="--font-display" preload />
+		<Font cssVariable="--font-body" preload />
 	</head>
 	<body>
-		<header class:list={{ overlay: overlayHeader }}>
-			<nav aria-label="Hauptmenü">
-				<a href="/">Home</a>
-				<span aria-hidden="true">|</span>
-				<a href="/gallerie">Gallerie</a>
-				<span aria-hidden="true">|</span>
-				<a href="/kontakt">Kontakt</a>
-			</nav>
-		</header>
 		<main>
 			<slot />
 		</main>
@@ -37,35 +27,28 @@ const { title, overlayHeader = false } = Astro.props;
 </html>
 
 <style is:global>
-	/* Colours taken from the profile photo: deep navy background with a blue glow, gold accent */
+	/* Palette "Midnight & Gold" */
 	:root {
-		--color-night: #020914;
-		--color-navy: #0a1f38;
-		--color-blue: #0d487f;
+		--color-midnight: #0b1428;
+		--color-surface: #13213f;
 		--color-gold: #d6b25e;
-		--color-gold-light: #e8cb85;
-		--color-on-dark: #eef1f6;
-		--color-text: #1c2433;
-		--color-heading: #0a1f38;
-		--color-page: #faf8f4;
-
-		--font-heading: 'Playfair Display Variable', Georgia, serif;
-		--font-body: 'Source Sans 3 Variable', system-ui, sans-serif;
+		--color-cream: #f4ecd8;
+		/* The one playful contrast colour, for buttons and calls to action only */
+		--color-cta: #e8593f;
+		--color-cta-hover: #f07058;
 
 		/* Type scale, mobile first */
-		--text-small: 0.9375rem;
+		--text-small: 0.875rem;
 		--text-body: 1.0625rem;
-		--text-h2: 1.75rem;
-		--text-h1: 2.125rem;
-
-		--radius: 12px;
+		--text-lead: 1.1875rem;
+		--text-display: 2.75rem;
 	}
 
 	@media (min-width: 720px) {
 		:root {
 			--text-body: 1.125rem;
-			--text-h2: 2.25rem;
-			--text-h1: 3rem;
+			--text-lead: 1.375rem;
+			--text-display: 4.5rem;
 		}
 	}
 
@@ -79,26 +62,17 @@ const { title, overlayHeader = false } = Astro.props;
 		margin: 0;
 		font-family: var(--font-body);
 		font-size: var(--text-body);
-		line-height: 1.65;
-		color: var(--color-text);
-		background: var(--color-page);
+		line-height: 1.6;
+		color: var(--color-cream);
+		background: var(--color-midnight);
 	}
 
 	h1,
 	h2,
 	h3 {
-		font-family: var(--font-heading);
+		font-family: var(--font-display);
 		font-weight: 600;
-		line-height: 1.2;
-		color: var(--color-heading);
-	}
-
-	h1 {
-		font-size: var(--text-h1);
-	}
-
-	h2 {
-		font-size: var(--text-h2);
+		line-height: 1.1;
 	}
 
 	img {
@@ -107,7 +81,7 @@ const { title, overlayHeader = false } = Astro.props;
 		display: block;
 	}
 
-	/* Shared button style */
+	/* Shared call-to-action button */
 	.button {
 		display: inline-flex;
 		align-items: center;
@@ -115,64 +89,36 @@ const { title, overlayHeader = false } = Astro.props;
 		min-height: 48px;
 		padding: 0.75rem 1.75rem;
 		border: none;
-		border-radius: 8px;
+		border-radius: 999px;
 		font-family: var(--font-body);
 		font-size: var(--text-body);
-		font-weight: 600;
-		letter-spacing: 0.02em;
-		color: var(--color-night);
-		background: var(--color-gold);
+		font-weight: 700;
+		color: var(--color-midnight);
+		background: var(--color-cta);
 		text-decoration: none;
 		cursor: pointer;
+		transition: background-color 0.2s, transform 0.2s;
 	}
 
 	.button:hover,
 	.button:focus-visible {
-		background: var(--color-gold-light);
+		background: var(--color-cta-hover);
+		transform: translateY(-2px);
 	}
 
 	.button:focus-visible {
-		outline: 2px solid var(--color-blue);
+		outline: 2px solid var(--color-gold);
 		outline-offset: 3px;
 	}
-</style>
 
-<style>
-	header {
-		padding: 0.5rem 1rem;
-		background: var(--color-night);
-	}
+	@media (prefers-reduced-motion: reduce) {
+		.button {
+			transition: none;
+		}
 
-	header.overlay {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		background: transparent;
-	}
-
-	nav {
-		display: flex;
-		justify-content: flex-end;
-		align-items: center;
-		gap: 0.25rem;
-		color: var(--color-gold);
-	}
-
-	/* Thumb-friendly tap targets (at least 44px high) */
-	nav a {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		padding: 0 0.5rem;
-		font-size: var(--text-small);
-		letter-spacing: 0.04em;
-		color: var(--color-on-dark);
-		text-decoration: none;
-	}
-
-	nav a:hover,
-	nav a:focus-visible {
-		color: var(--color-gold-light);
+		.button:hover,
+		.button:focus-visible {
+			transform: none;
+		}
 	}
 </style>

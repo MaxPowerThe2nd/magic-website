@@ -1,86 +1,92 @@
 ---
-import { Picture } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
-import profilePic from '../images/home-profilepic.webp';
 ---
 
-<Layout title="Hütter Entertainment" overlayHeader>
+<Layout title="Bühnenname">
 	<section class="hero">
-		<div class="banner">
-			<Picture
-				src={profilePic}
-				alt="Zauberkünstler im dunklen Anzug mit Zauberstab und aufgefächerten Spielkarten"
-				formats={['avif', 'webp']}
-				fallbackFormat="webp"
-				widths={[400, 800, 1254]}
-				sizes="(min-width: 720px) 640px, calc(100vw - 2rem)"
-				loading="eager"
-				fetchpriority="high"
-			/>
-			<h1>Hütter Entertainment</h1>
+		<!-- Placeholder until the final hero photo is chosen -->
+		<div class="hero-photo" role="img" aria-label="Platzhalter für das Hero-Foto">
+			<span class="hero-photo-label">Foto-Platzhalter</span>
 		</div>
-	</section>
 
-	<section class="about">
-		<h2>About</h2>
-		<p>
-			Seien Sie gegrüßt! Sie suchen magische Unterhaltung für einen geschäftlichen oder
-			persönlichen Anlass? Dann sind Sie hier genau richtig.
-		</p>
-		<p>
-			Seit 10 Jahren begeistere ich als Zauberkünstler mein Publikum. Mein Schwerpunkt ist
-			hautnahe Magie, direkt vor Ihren Augen und in Ihren Händen. Ebenso gestalte ich Shows im
-			Salonstil für kleinere und mittlere Gesellschaften.
-		</p>
-		<p>
-			Für Restaurants, Empfänge und Feiern biete ich Walking Acts von Tisch zu Tisch, das
-			sogenannte „Table Hopping“: Ihre Gäste erleben Zauberei in entspannter Atmosphäre, ganz
-			ohne Bühne.
-		</p>
-		<a class="button" href="/kontakt">Anfragen</a>
+		<div class="hero-content">
+			<h1 class="stage-name">Bühnenname</h1>
+			<p class="tagline">Hier steht der Slogan in einer Zeile.</p>
+			<a class="button" href="#kontakt">Show anfragen</a>
+		</div>
 	</section>
 </Layout>
 
 <style>
-	/* Blue glow on deep navy, matching the photo background */
+	/* Full-screen hero: photo fills the screen, text sits on the lower part */
 	.hero {
-		/* Top padding leaves room for the menu lying over this section */
-		padding: 4rem 1rem 2.5rem;
-		background: radial-gradient(
-			ellipse at 50% 45%,
-			var(--color-blue) 0%,
-			var(--color-navy) 45%,
-			var(--color-night) 80%
-		);
-	}
-
-	.banner {
-		max-width: 640px;
-		margin: 0 auto;
-		border-radius: var(--radius);
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		min-height: 100svh;
 		overflow: hidden;
-		background: var(--color-night);
-		box-shadow: 0 12px 40px rgb(0 0 0 / 0.5);
 	}
 
-	.banner h1 {
-		margin: 0;
-		padding: 0.875rem 1rem 1rem;
-		text-align: center;
+	.hero-photo {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background:
+			radial-gradient(ellipse 80% 55% at 50% 35%, #1d3a6e 0%, transparent 70%),
+			var(--color-surface);
+	}
+
+	.hero-photo-label {
+		margin-bottom: 30svh;
+		padding: 0.5rem 1rem;
+		border: 1px dashed rgb(244 236 216 / 0.4);
+		border-radius: 4px;
+		font-size: var(--text-small);
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: rgb(244 236 216 / 0.6);
+	}
+
+	/* Dark fade at the bottom keeps the text readable on any photo */
+	.hero::after {
+		content: '';
+		position: absolute;
+		inset: auto 0 0;
+		height: 65%;
+		background: linear-gradient(to top, var(--color-midnight) 15%, transparent);
+	}
+
+	.hero-content {
+		position: relative;
+		z-index: 1;
+		padding: 0 1.25rem 3rem;
+	}
+
+	.stage-name {
+		margin: 0 0 0.75rem;
+		font-size: var(--text-display);
 		color: var(--color-gold);
 	}
 
-	.about {
-		max-width: 640px;
-		margin: 0 auto;
-		padding: 2.5rem 1rem 3rem;
+	.tagline {
+		margin: 0 0 2rem;
+		font-size: var(--text-lead);
+		line-height: 1.4;
 	}
 
-	.about h2 {
-		margin: 0 0 0.75rem;
-	}
+	@media (min-width: 720px) {
+		.hero-content {
+			width: 100%;
+			max-width: 1120px;
+			margin: 0 auto;
+			padding: 0 2.5rem 5rem;
+		}
 
-	.about .button {
-		margin-top: 1rem;
+		.tagline {
+			margin-bottom: 2.5rem;
+		}
 	}
 </style>
