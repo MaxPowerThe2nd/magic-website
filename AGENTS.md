@@ -10,6 +10,13 @@ Always do exactly one small step, then stop, explain briefly and wait for approv
 # Design
 Mobile first: every page and every element is built for smartphones first and must work flawlessly there (readability, thumb-friendly operation, no horizontal scrollbar). Larger screens are added afterwards via media queries, not the other way around.
 
+# Design direction
+Style: classic variety-show elegance with a wink. Professional and trustworthy for corporate clients and weddings, entertaining and humorous in small details. Humor lives in copy and micro-interactions (button texts, FAQ, 404 page, subtle effects), never in the base layout, and is used sparingly.
+Colors: dark stage-like base (deep midnight blue or burgundy), warm gold or cream as accent, at most one playful contrast color for buttons and calls to action.
+Typography: characterful serif display font for headings (vintage poster / classic magic show feel), clean highly readable sans-serif for body text. Fonts are self-hosted via Astro, never loaded from Google servers.
+Structure: one-pager with sections in this order: navbar (hamburger menu on mobile), hero, show formats / booking occasions, photos and videos, testimonials, about, FAQ, contact, footer with legal notice (Impressum). A persistent booking button stays visible on mobile.
+Photos: prefer images of amazed or laughing audiences over images of tricks.
+
 # Documentation
 All documentation is written in English: instruction files, commit messages, code comments, README and any other docs.
 
