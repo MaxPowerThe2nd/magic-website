@@ -2,10 +2,13 @@
 import { Picture } from 'astro:assets';
 // Cut-out portrait with a transparent background, so the page colour shows through exactly (no masks or glows)
 import heroPortrait from '../images/hero-portrait.webp';
+import { showreel, videoUrl, videoEmbed } from '../data/media';
+
+const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verblüffend und mit Humor'];
 ---
 
 <section class="hero" id="hero" data-hero>
-	<div class="hero-inner">
+	<div class="hero-inner container">
 		<div class="hero-photo">
 			<Picture
 				class="portrait"
@@ -18,15 +21,39 @@ import heroPortrait from '../images/hero-portrait.webp';
 				loading="eager"
 				fetchpriority="high"
 			/>
+
+			{
+				showreel && (
+					<a
+						class="showreel"
+						href={videoUrl(showreel)}
+						data-effect="video-lightbox"
+						data-video-type={showreel.type}
+						data-video-embed={videoEmbed(showreel)}
+						data-video-title="Showreel Reinhard Hütter"
+					>
+						<span class="showreel-button" aria-hidden="true">
+							<svg viewBox="0 0 24 24">
+								<path d="M8 5.5v13l11-6.5z" />
+							</svg>
+						</span>
+						<span class="showreel-label">Showreel</span>
+					</a>
+				)
+			}
 		</div>
 
 		<div class="hero-content">
-			<p class="eyebrow">Zauberkünstler &amp; Entertainer</p>
 			<!-- The name is only visible in the logo; it stays in the heading for search engines -->
-			<h1 class="claim">
-				<span class="visually-hidden">Reinhard Hütter – </span>Magie auf dem silbernen Tablett
+			<h1 class="hero-title">
+				<span class="visually-hidden">Reinhard Hütter – </span>
+				<span class="line">Moderne Zauberkunst</span>
+				<span class="line">für Ihr Event</span>
 			</h1>
-			<a class="button" href="#kontakt">Show anfragen</a>
+			<ul class="hero-points">
+				{points.map((point) => <li>{point}</li>)}
+			</ul>
+			<a class="button hero-button" href="#kontakt">Show anfragen</a>
 		</div>
 	</div>
 </section>
@@ -43,7 +70,14 @@ import heroPortrait from '../images/hero-portrait.webp';
 	.hero-photo {
 		position: relative;
 		width: var(--photo-width);
-		margin: 0 auto;
+		margin-inline: auto;
+	}
+
+	/* Phones: photo runs edge to edge, ignoring the side gutter */
+	@media (max-width: 559px) {
+		.hero-photo {
+			margin-inline: calc(var(--gutter) * -1);
+		}
 	}
 
 	.hero-photo :global(.portrait) {
@@ -61,44 +95,129 @@ import heroPortrait from '../images/hero-portrait.webp';
 		pointer-events: none;
 	}
 
-	/* Mobile: text block overlaps the faded lower part of the photo */
+	/* Showreel play button, level with the fanned cards */
+	.showreel {
+		position: absolute;
+		z-index: 1;
+		top: 30%;
+		left: 8%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-2);
+		text-decoration: none;
+	}
+
+	.showreel-button {
+		display: grid;
+		place-items: center;
+		width: 3.5rem;
+		height: 3.5rem;
+		border: 1px solid var(--color-accent);
+		border-radius: 50%;
+		background: rgb(11 20 38 / 0.6);
+		color: var(--color-accent);
+		transition:
+			background-color var(--duration-fast),
+			color var(--duration-fast);
+	}
+
+	.showreel-button svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		margin-left: 0.15rem;
+		fill: currentColor;
+	}
+
+	.showreel:hover .showreel-button,
+	.showreel:focus-visible .showreel-button {
+		background: var(--color-accent);
+		color: var(--color-on-accent);
+	}
+
+	.showreel-label {
+		font-size: var(--text-xs);
+		letter-spacing: var(--tracking-kicker);
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	/* Phones: text block overlaps the faded lower part of the photo */
 	.hero-content {
 		position: relative;
-		max-width: var(--photo-width);
-		margin: calc(var(--photo-width) * -0.3) auto 0;
-		padding: 0 var(--gutter) var(--section-space);
+		margin-top: calc(var(--photo-width) * -0.3);
+		padding-bottom: var(--section-space);
 	}
 
-	.hero-content .eyebrow {
-		margin-bottom: var(--space-2);
-	}
-
-	.claim {
-		margin: 0 0 var(--space-7);
+	.hero-title {
+		margin: 0 0 var(--space-5);
 		font-size: var(--text-display);
-		font-style: italic;
+		line-height: var(--lh-display);
+	}
+
+	.hero-title .line {
+		display: block;
+	}
+
+	.hero-points {
+		display: grid;
+		gap: var(--space-2);
+		margin: 0 0 var(--space-7);
+		padding: 0;
+		list-style: none;
+		font-family: var(--font-display);
+		font-size: var(--text-points);
 		font-weight: var(--weight-display-light);
 		line-height: var(--leading-tight);
 		color: var(--color-accent);
 	}
 
+	.hero-points li {
+		display: flex;
+		align-items: center;
+		gap: 0.75em;
+	}
+
+	/* Small diamond in front of every line */
+	.hero-points li::before {
+		content: '';
+		flex: none;
+		width: 0.3em;
+		height: 0.3em;
+		background: currentColor;
+		transform: rotate(45deg);
+	}
+
+	/* Full-width button on phones */
+	.hero-button {
+		width: 100%;
+	}
+
+	@media (min-width: 720px) {
+		.hero-button {
+			width: auto;
+		}
+	}
+
 	/* Desktop: text vertically centred beside the figure, left edge in line with the logo */
 	@media (min-width: 960px) {
-		.hero-inner {
-			display: grid;
-			grid-template-columns: 1fr 540px;
-			align-items: center;
-			max-width: calc(var(--content-width) + 2 * var(--gutter));
-			margin: 0 auto;
-			padding: 0 var(--gutter);
-		}
-
 		.hero {
 			--photo-width: 540px;
 		}
 
+		.hero-inner {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			align-items: center;
+			gap: var(--space-6);
+		}
+
 		.hero-photo {
 			order: 2;
+			width: 100%;
+			max-width: var(--photo-width);
+			margin: 0;
+			justify-self: end;
 		}
 
 		.hero-photo::after {
@@ -107,9 +226,14 @@ import heroPortrait from '../images/hero-portrait.webp';
 
 		.hero-content {
 			order: 1;
-			max-width: none;
 			margin: 0;
-			padding: 0;
+			padding-bottom: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.showreel-button {
+			transition: none;
 		}
 	}
 </style>

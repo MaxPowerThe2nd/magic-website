@@ -20,6 +20,8 @@ body {
 	color: var(--color-text);
 	background: var(--color-bg);
 	-webkit-font-smoothing: antialiased;
+	/* Cormorant defaults to old-style figures; keep numbers like "10" lining */
+	font-variant-numeric: lining-nums;
 }
 
 h1,
@@ -29,6 +31,11 @@ h3 {
 	font-weight: var(--weight-display);
 	line-height: var(--leading-tight);
 	color: var(--color-text);
+}
+
+h1,
+h2 {
+	line-height: var(--lh-display);
 }
 
 img {
@@ -61,18 +68,23 @@ a:hover {
 	white-space: nowrap;
 }
 
+/* Page container: same side gutter and max width for header, hero, sections and footer,
+   so logo, hero text and section content share one left edge */
+.container,
+.section-inner {
+	width: 100%;
+	max-width: calc(var(--content-width) + 2 * var(--gutter));
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
 /* Shared section layout */
 .section {
-	padding: var(--section-space) var(--gutter);
+	padding-block: var(--section-space);
 }
 
 .section-alt {
 	background: var(--color-surface);
-}
-
-.section-inner {
-	max-width: var(--content-width);
-	margin: 0 auto;
 }
 
 /* Kicker above headings */

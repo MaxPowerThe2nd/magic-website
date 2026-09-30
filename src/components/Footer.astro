@@ -5,7 +5,7 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
-	<div class="footer-inner">
+	<div class="footer-inner container">
 		<p class="footer-name">{contact.name}</p>
 		<ul class="footer-contact">
 			<li><a href={phoneHref}>{contact.phoneDisplay}</a></li>
@@ -22,14 +22,9 @@ const year = new Date().getFullYear();
 <style>
 	.footer {
 		/* Extra space at the bottom so the mobile booking bar never covers content */
-		padding: var(--space-8) var(--gutter) calc(var(--space-8) * 2.25);
+		padding-block: var(--space-8) calc(var(--space-8) * 2.25);
 		border-top: 1px solid var(--color-border);
 		text-align: center;
-	}
-
-	.footer-inner {
-		max-width: var(--content-width);
-		margin: 0 auto;
 	}
 
 	.footer-name {
@@ -81,7 +76,7 @@ const year = new Date().getFullYear();
 
 	@media (min-width: 960px) {
 		.footer {
-			padding-bottom: var(--space-8);
+			padding-block-end: var(--space-8);
 		}
 	}
 </style>

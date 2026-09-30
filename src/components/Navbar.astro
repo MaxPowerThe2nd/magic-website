@@ -11,8 +11,11 @@ const links = [
 ---
 
 <header class="navbar" data-navbar>
-	<div class="navbar-inner">
-		<a class="brand" href="/">Reinhard Hütter</a>
+	<div class="navbar-inner container">
+		<a class="brand" href="/">
+			<span class="brand-name">Reinhard Hütter</span>
+			<span class="brand-role">Zauberkünstler</span>
+		</a>
 
 		<button
 			class="menu-toggle"
@@ -65,37 +68,48 @@ const links = [
 </script>
 
 <style>
-	/* Always opaque with a light blur, so scrolled content never shows behind logo and nav */
+	/* Opaque and darker than the hero, so scrolled content never shows behind logo and nav */
 	.navbar {
 		position: fixed;
 		inset: 0 0 auto;
 		z-index: 10;
 		background: var(--color-header-bg);
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid var(--color-border-subtle);
 	}
 
 	.navbar-inner {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		max-width: calc(var(--content-width) + 2 * var(--gutter));
 		min-height: var(--header-height);
-		margin: 0 auto;
-		/* Right side is smaller because the hamburger button brings its own padding */
-		padding: 0 var(--space-2) 0 var(--gutter);
 	}
 
 	.brand {
-		font-family: var(--font-display);
-		font-size: var(--text-lead-min);
-		font-weight: var(--weight-display);
-		color: var(--color-text);
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
 		text-decoration: none;
 	}
 
-	.brand:hover {
+	.brand-name {
+		font-family: var(--font-display);
+		font-size: var(--text-lead-min);
+		font-weight: var(--weight-display);
+		line-height: 1;
+		color: var(--color-text);
+	}
+
+	.brand-role {
+		font-family: var(--font-body);
+		font-size: 0.625rem;
+		font-weight: 500;
+		line-height: 1;
+		letter-spacing: var(--tracking-logo);
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	.brand:hover .brand-name {
 		color: var(--color-accent);
 	}
 
@@ -105,6 +119,8 @@ const links = [
 		place-items: center;
 		width: var(--tap-target);
 		height: var(--tap-target);
+		/* Line the icon up with the right gutter although the tap target is wider */
+		margin-right: calc((var(--tap-target) - 22px) / -2);
 		padding: 0;
 		border: none;
 		background: none;
@@ -192,8 +208,8 @@ const links = [
 			display: none;
 			position: absolute;
 			inset: 100% 0 auto;
-			background: var(--color-bg);
-			border-bottom: 1px solid var(--color-border);
+			background: var(--color-header-bg);
+			border-bottom: 1px solid var(--color-border-subtle);
 		}
 
 		:global(.js) .is-open .menu {
@@ -216,9 +232,10 @@ const links = [
 		}
 	}
 
+	/* Desktop: last link ends exactly at the right gutter */
 	@media (min-width: 960px) {
-		.navbar-inner {
-			padding: 0 var(--gutter);
+		.menu li:last-child a {
+			padding-right: 0;
 		}
 	}
 

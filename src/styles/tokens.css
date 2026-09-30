@@ -19,7 +19,8 @@
 	--color-text-faint: rgb(233 230 223 / 0.58);
 	--color-border: rgb(217 212 199 / 0.18);
 	--color-border-strong: rgb(217 212 199 / 0.4);
-	--color-header-bg: rgb(11 20 38 / 0.92);
+	--color-border-subtle: rgb(217 212 199 / 0.12);
+	--color-header-bg: #060b16; /* darker than the hero */
 
 	/* Type scale, mobile first */
 	--text-xs: 0.8125rem;
@@ -30,9 +31,12 @@
 	--text-h3: 1.625rem;
 	--text-h2: 2.25rem;
 	--text-h1: 2.5rem;
-	--text-display: 2.625rem; /* hero claim */
+	/* Hero h1: scales with the viewport so "Moderne Zauberkunst" always fits on one line */
+	--text-display: min(2.75rem, 9.4vw);
+	--text-points: 1.25rem; /* hero bullet lines, never below 19px */
 
 	--leading-tight: 1.15;
+	--lh-display: 1.05; /* large headings incl. hero h1 */
 
 	/* Cormorant needs some weight to hold its own on the dark background */
 	--weight-display: 600;
@@ -40,6 +44,7 @@
 	--leading-body: 1.65;
 	--tracking-kicker: 0.15em;
 	--tracking-button: 0.12em;
+	--tracking-logo: 0.3em;
 
 	/* Spacing */
 	--space-1: 0.25rem;
@@ -50,10 +55,11 @@
 	--space-6: 2rem;
 	--space-7: 2.5rem;
 	--space-8: 3rem;
-	--gutter: 1rem; /* 16px side gutter on phones */
+	/* One side gutter for every block on the page: 24px on phones up to 80px on desktop */
+	--gutter: clamp(1.5rem, 5vw, 5rem);
 	--section-space: 4.5rem;
-	--content-width: 1120px;
-	--header-height: 3.5rem;
+	--content-width: 1200px;
+	--header-height: 4rem;
 	--tap-target: 48px;
 
 	/* Radii */
@@ -75,9 +81,9 @@
 		--text-h3: 1.875rem;
 		--text-h2: 3rem;
 		--text-h1: 3.5rem;
-		--text-display: 4.25rem;
-		--gutter: 2.5rem;
+		--text-display: clamp(2.75rem, 4.6vw, 4rem);
+		--text-points: 1.5rem;
 		--section-space: 6.5rem;
-		--header-height: 4rem;
+		--header-height: 4.5rem;
 	}
 }

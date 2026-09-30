@@ -15,7 +15,7 @@ export default defineConfig({
 			name: 'Cormorant Garamond',
 			cssVariable: '--font-display',
 			weights: ['400', '500', '600'],
-			styles: ['normal', 'italic'],
+			styles: ['normal'],
 			subsets: ['latin'],
 			formats: ['woff2'],
 			display: 'swap',

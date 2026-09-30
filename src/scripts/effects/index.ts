@@ -5,6 +5,7 @@ type EffectModule = { init: (element: HTMLElement) => void };
 const effects: Record<string, () => Promise<EffectModule>> = {
 	cloche: () => import('./cloche'),
 	'enquiry-form': () => import('./enquiry-form'),
+	'video-lightbox': () => import('./video-lightbox'),
 };
 
 for (const element of document.querySelectorAll<HTMLElement>('[data-effect]')) {

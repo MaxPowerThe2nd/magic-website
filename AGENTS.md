@@ -9,6 +9,7 @@ Always do exactly one small step, then stop, explain briefly and wait for approv
 
 # Design
 Mobile first: every page and every element is built for smartphones first and must work flawlessly there (readability, thumb-friendly operation, no horizontal scrollbar). Larger screens are added afterwards via media queries, not the other way around.
+Side gutters: one token --gutter (clamp(1.5rem, 5vw, 5rem), i.e. at least 24px on phones and up to 80px on desktop) is used left and right by every block (header, hero, all sections, footer, mobile booking bar); no block defines its own side padding. Content sits in a centred container with a max width of about 1200px, so logo, hero text and section content share one left edge. Check layouts at 360, 390, 768, 1280 and 1920px width.
 
 # Design direction
 Positioning: modern close-up magic with humour, classic and elegant, never circus. Humour lives in wording and small surprises (button texts, FAQ, 404 page, subtle effects), never in the visuals. Must not look like a clown, children's party or circus act: no top hats, rabbits, capes, comic fonts or bright colours. Preferred words: "Zauberkunst", "Programm", "Auftritt". Avoid "Hokuspokus", "für Groß und Klein", "Spaß für die ganze Familie".
