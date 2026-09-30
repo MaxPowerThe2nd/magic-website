@@ -1,14 +1,14 @@
 // Effect module "burning-card": renders the ace in a <canvas>, lets it catch fire at the
-// top right corner and burn away a frayed corner, then keeps the edge smouldering.
+// top right corner and burn away a frayed corner, then keeps the corner burning lightly.
 //
-// Timeline (starts ~2.5 s after the card is >= 50% visible, the page has loaded and the
-// flame video can play; only once per browser session):
+// Timeline (starts shortly after the page has loaded, as soon as the card is >= 50% visible
+// and the flame video can play; restarts on every page load):
 //   ignite  1 s   a small glowing dot at the corner
 //   burn   10 s   the burn edge eats diagonally inwards, flames and embers ride on it
-//   fade    2 s   flames shrink and disappear
-//   smoulder      glowing line pulses weakly, a single ember now and then (low frame rate)
-// Reduced motion or a repeated visit in the same session: the smouldering end state at once
-// (reduced motion: static, without flames and embers).
+//   fade    2 s   flames shrink to a small afterburn
+//   afterburn     the burnt corner keeps burning lightly: small flames, glowing line pulses,
+//                 an ember now and then
+// Reduced motion: the end state at once, static, without flames and embers.
 
 const ROTATION = (-12 * Math.PI) / 180;
 // Canvas size around the card box, as fractions of card width/height (mirrors the CSS)
@@ -18,14 +18,13 @@ const CANVAS_MARGIN = { left: 0.2, right: 0.6, top: 0.8, bottom: 0.15 };
 const TEX_W = 300;
 const TEX_H = 420;
 // Final burnt corner: along the top edge ~45% of the width, along the right edge ~50% of the height
-const CORNER_X = 0.45;
-const CORNER_Y = 0.5;
+const CORNER_X = 0.38;
+const CORNER_Y = 0.42;
 
-const START_DELAY_MS = 2500;
+const START_DELAY_MS = 600;
 const IGNITE_MS = 1000;
 const BURN_MS = 10000;
 const FADE_MS = 2000;
-const SMOULDER_FPS = 12;
 
 // Widths of the burn edge zones, in normalized burn distance (1 = final corner size)
 const EDGE_AA = 0.006;
@@ -33,7 +32,9 @@ const GLOW = 0.02;
 const CHAR = 0.035;
 const HEAT = 0.11;
 
-const SESSION_KEY = 'burning-card-played';
+// Small flames that keep burning on the corner after the main burn
+const AFTERBURN_SIZE = 0.24;
+const AFTERBURN_ALPHA = 0.9;
 
 // Flame video is processed at this size (black -> transparent)
 const FLAME_W = 160;
@@ -46,19 +47,18 @@ export function init(root) {
 	if (!canvas || !video || !fallback) return;
 
 	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	const alreadyPlayed = readSession();
 
 	const image = new Image();
 	image.src = fallback.currentSrc || fallback.src;
 	image
 		.decode()
-		.then(() => start(root, canvas, video, image, reducedMotion, alreadyPlayed))
+		.then(() => start(root, canvas, video, image, reducedMotion))
 		.catch(() => {
 			// Keep the plain image if the card cannot be decoded
 		});
 }
 
-function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
+function start(root, canvas, video, image, reducedMotion) {
 	const colors = readColors(root);
 	const ctx = canvas.getContext('2d');
 
@@ -133,16 +133,15 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 	};
 
 	// ---- State ----
-	let phase = 'wait'; // wait | ignite | burn | fade | smoulder
+	let phase = 'wait'; // wait | ignite | burn | fade | afterburn | still
 	let elapsed = 0; // ms since ignition, only counted while visible
 	let front = -Infinity; // current burn front in normalized burn distance
 	let glowStrength = 1;
 	let edge = { points: [], minX: 0, maxX: 0, maxY: 0, count: 0 };
 	const embers = [];
-	let nextSmoulderEmber = 0;
+	let nextAfterburnEmber = 0;
 	let visible = false;
 	let rafId = 0;
-	let smoulderTimer = 0;
 	let lastTick = 0;
 
 	// Recolour the corner region for the current front and collect the burn edge
@@ -219,7 +218,8 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 	};
 
 	// Flames sit on the current burn edge, rise straight up and are only visible above it
-	const drawFlames = (size, alpha) => {
+	// low = afterburn: several small flames spread along the edge instead of one tall flame
+	const drawFlames = (size, alpha, low = false) => {
 		if (alpha <= 0 || size <= 0 || video.readyState < 2) return;
 
 		flameSrcCtx.drawImage(video, 0, 0, FLAME_W, FLAME_H);
@@ -245,7 +245,19 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 
 		layerCtx.clearRect(0, 0, cssW, cssH);
 		layerCtx.globalCompositeOperation = 'source-over';
-		layerCtx.drawImage(flameSrc, flameX, flameY, flameW, flameH);
+		if (low && hasEdge) {
+			// Afterburn: a few small flames standing on points spread along the edge
+			const sorted = [...edge.points].sort((a, b) => a[0] - b[0]);
+			const count = 4;
+			const smallW = cardW * 0.3 * (size / AFTERBURN_SIZE);
+			const smallH = smallW * 1.3;
+			for (let i = 0; i < count; i++) {
+				const [px, py] = sorted[Math.floor(((i + 0.5) / count) * (sorted.length - 1))];
+				layerCtx.drawImage(flameSrc, px - smallW / 2, py + cardW * 0.02 - smallH * 0.9, smallW, smallH);
+			}
+		} else {
+			layerCtx.drawImage(flameSrc, flameX, flameY, flameW, flameH);
+		}
 		// Never over the intact card
 		layerCtx.globalCompositeOperation = 'destination-out';
 		drawCardTo(layerCtx);
@@ -339,19 +351,24 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 			flameAlpha = Math.min(1, p * 8);
 			ignition = Math.max(0, 1 - p * 6);
 		} else if (phase === 'fade') {
-			const p = (elapsed - IGNITE_MS - BURN_MS) / FADE_MS;
-			flameSize = 0.35 * (1 - p);
-			flameAlpha = 1 - p;
+			const p = Math.min(1, (elapsed - IGNITE_MS - BURN_MS) / FADE_MS);
+			flameSize = lerp(0.35, AFTERBURN_SIZE, p);
+			flameAlpha = lerp(1, AFTERBURN_ALPHA, p);
+		} else if (phase === 'afterburn') {
+			// The corner keeps burning lightly, with a slow, irregular flicker
+			const t = elapsed / 1000;
+			flameSize = AFTERBURN_SIZE * (1 + 0.12 * Math.sin(t * 2.3) + 0.06 * Math.sin(t * 5.1));
+			flameAlpha = AFTERBURN_ALPHA;
 		}
 
-		if (phase === 'smoulder') {
-			// Weak, slow pulse of the glowing line
-			glowStrength = reducedMotion ? 0.8 : 0.6 + 0.25 * Math.sin((performance.now() / 3500) * Math.PI * 2);
+		if (phase === 'afterburn' || phase === 'still') {
+			// Weak, slow pulse of the glowing line (static with reduced motion)
+			glowStrength = phase === 'still' ? 0.8 : 0.65 + 0.25 * Math.sin((elapsed / 3500) * Math.PI * 2);
 		}
 
 		renderCard();
 		drawCardTo(ctx);
-		drawFlames(flameSize, flameAlpha);
+		drawFlames(flameSize, flameAlpha, phase === 'afterburn');
 		drawIgnition(ignition);
 		if (!reducedMotion) drawEmbers(dtSeconds);
 	};
@@ -370,46 +387,32 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 		}
 		if (phase === 'burn' && elapsed >= IGNITE_MS + BURN_MS) phase = 'fade';
 		if (phase === 'fade' && elapsed >= IGNITE_MS + BURN_MS + FADE_MS) {
-			video.pause();
-			enterSmoulder();
-			return;
+			phase = 'afterburn';
+			front = 1;
 		}
 
 		// Embers break away from the current edge while it burns; more edge, more embers
 		const emberRate = Math.min(7, 1 + edge.count / 12);
 		if (phase === 'burn' && Math.random() < dtSeconds * emberRate) spawnEmber(false);
+		// Afterburn: a single slow ember every few seconds
+		if (phase === 'afterburn' && elapsed >= nextAfterburnEmber) {
+			spawnEmber(true);
+			nextAfterburnEmber = elapsed + 1500 + Math.random() * 2000;
+		}
 
 		draw();
 		if (visible) rafId = requestAnimationFrame(tick);
 	};
 
-	const smoulderTick = () => {
-		if (!visible) return;
-		dtSeconds = 1 / SMOULDER_FPS;
-		const now = performance.now();
-		if (now >= nextSmoulderEmber) {
-			spawnEmber(true);
-			nextSmoulderEmber = now + 2500 + Math.random() * 2500;
-		}
-		draw();
-	};
-
-	const enterSmoulder = () => {
-		phase = 'smoulder';
+	// Reduced motion: burnt end state at once, static, without flames and embers
+	const showStill = () => {
+		phase = 'still';
 		front = 1;
-		lastTick = 0;
-		if (reducedMotion) {
-			draw();
-			return;
-		}
-		nextSmoulderEmber = performance.now() + 1500;
-		window.clearInterval(smoulderTimer);
-		smoulderTimer = window.setInterval(smoulderTick, 1000 / SMOULDER_FPS);
 		draw();
 	};
 
 	const resume = () => {
-		if (phase === 'ignite' || phase === 'burn' || phase === 'fade') {
+		if (phase === 'ignite' || phase === 'burn' || phase === 'fade' || phase === 'afterburn') {
 			if (phase !== 'ignite') video.play().catch(() => {});
 			lastTick = 0;
 			if (!rafId) rafId = requestAnimationFrame(tick);
@@ -429,7 +432,6 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 	let startTimer = 0;
 
 	const ignite = () => {
-		writeSession();
 		phase = 'ignite';
 		elapsed = 0;
 		if (visible) resume();
@@ -444,8 +446,8 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 	new ResizeObserver(resize).observe(root);
 	resize();
 
-	if (reducedMotion || alreadyPlayed) {
-		enterSmoulder();
+	if (reducedMotion) {
+		showStill();
 	} else {
 		window.addEventListener('load', () => {
 			pageLoaded = true;
@@ -468,7 +470,6 @@ function start(root, canvas, video, image, reducedMotion, alreadyPlayed) {
 			halfVisible = halfVisible || entry.intersectionRatio >= 0.5;
 			if (visible) {
 				resume();
-				if (phase === 'smoulder' && !reducedMotion) smoulderTick();
 			} else {
 				pause();
 			}
@@ -512,21 +513,6 @@ function readColors(el) {
 	};
 }
 
-function readSession() {
-	try {
-		return sessionStorage.getItem(SESSION_KEY) === '1';
-	} catch {
-		return false;
-	}
-}
-
-function writeSession() {
-	try {
-		sessionStorage.setItem(SESSION_KEY, '1');
-	} catch {
-		// Storage may be blocked; then the effect simply plays again
-	}
-}
 
 // Smooth value noise and fractal sum of a few octaves, deterministic
 function hash(x, y) {

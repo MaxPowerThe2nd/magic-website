@@ -1,8 +1,9 @@
 ---
 // Burning playing card, rendered in a <canvas> by src/scripts/effects/burning-card.js:
-// the intact ace catches fire at its top right corner, burns away a frayed corner in ~10 s,
-// then keeps smouldering. The flame footage is drawn into the canvas (black turned into
-// transparency), so no mix-blend-mode is needed and the card may float like the others.
+// shortly after the page has loaded the intact ace catches fire at its top right corner,
+// burns away a frayed corner in ~10 s and then keeps burning lightly. Restarts on every load.
+// The flame footage is drawn into the canvas (black turned into transparency), so no
+// mix-blend-mode is needed and the card may float like the others.
 //
 // Without JS the intact card is shown as a normal image. The canvas is larger than the
 // card (extra room above and to the right) to leave space for the flames.
