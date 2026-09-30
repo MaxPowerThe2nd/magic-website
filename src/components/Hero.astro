@@ -3,6 +3,7 @@ import { Picture } from 'astro:assets';
 // Cut-out portrait with a transparent background, so the page colour shows through exactly (no masks or glows)
 import heroPortrait from '../images/hero-portrait.webp';
 import { showreel, videoUrl, videoEmbed } from '../data/media';
+import FloatingCards from './FloatingCards.astro';
 
 const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verblüffend und mit Humor'];
 ---
@@ -10,6 +11,14 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 <section class="hero" id="hero" data-hero>
 	<div class="hero-inner container">
 		<div class="hero-photo">
+			<!-- Static stage light behind the figure: light cone from above, body glow, pool on the floor -->
+			<div class="stage-light" aria-hidden="true">
+				<span class="stage-glow"></span>
+				<span class="stage-cone"></span>
+				<span class="stage-pool"></span>
+			</div>
+			<FloatingCards />
+
 			<Picture
 				class="portrait"
 				src={heroPortrait}
@@ -47,7 +56,7 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 			<!-- The name is only visible in the logo; it stays in the heading for search engines -->
 			<h1 class="hero-title">
 				<span class="visually-hidden">Reinhard Hütter – </span>
-				<span class="line">Moderne Zauberkunst</span>
+				<span class="line">Moderne <span class="shine">Zauberkunst</span></span>
 				<span class="line">für Ihr Event</span>
 			</h1>
 			<ul class="hero-points">
@@ -65,6 +74,8 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 		/* Room for the fixed header, plus some air so the head is never cut off */
 		padding-top: calc(var(--header-height) + var(--space-4));
 		background: var(--bg);
+		/* Decorative light and cards must never cause horizontal scrolling */
+		overflow-x: clip;
 	}
 
 	.hero-photo {
@@ -81,15 +92,89 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 	}
 
 	.hero-photo :global(.portrait) {
+		position: relative;
 		width: 100%;
 		object-fit: contain;
 		object-position: top;
 	}
 
+	/* ---- Stage light (static, decorative) ---- */
+	.stage-light {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.stage-light span {
+		position: absolute;
+	}
+
+	/* Wide, very soft lightening around the body */
+	.stage-glow {
+		inset: 15% 10% 5%;
+		background: radial-gradient(closest-side, var(--color-stage-glow), transparent);
+	}
+
+	/* Soft light cone falling in diagonally from the top.
+	   Blur sits on the outer box so it also softens the cut-out cone edges. */
+	.stage-cone {
+		top: -25%;
+		left: 28%;
+		width: 50%;
+		height: 120%;
+		filter: blur(28px);
+		transform: rotate(-14deg);
+		transform-origin: 50% 0;
+	}
+
+	.stage-cone::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to bottom, var(--color-stage-cone), transparent 85%);
+		clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+	}
+
+	/* Flat elliptic pool of light on the floor under the figure */
+	.stage-pool {
+		left: 18%;
+		right: 18%;
+		bottom: 1%;
+		height: 12%;
+		background: radial-gradient(closest-side, var(--color-stage-pool), transparent);
+	}
+
+	/* ---- Silver shine: one pass over "Zauberkunst" after loading ---- */
+	@media (prefers-reduced-motion: no-preference) {
+		.shine {
+			background: linear-gradient(
+					105deg,
+					var(--color-text) 40%,
+					var(--color-shine) 50%,
+					var(--color-text) 60%
+				)
+				100% 0 / 300% 100% no-repeat;
+			-webkit-background-clip: text;
+			background-clip: text;
+			color: transparent;
+			animation: shine var(--duration-shine) ease-in-out 0.5s 1 both;
+		}
+	}
+
+	@keyframes shine {
+		from {
+			background-position: 100% 0;
+		}
+
+		to {
+			background-position: 0 0;
+		}
+	}
+
 	/* Showreel play button, level with the fanned cards */
 	.showreel {
 		position: absolute;
-		z-index: 1;
+		z-index: 2;
 		top: 30%;
 		left: 8%;
 		display: flex;
