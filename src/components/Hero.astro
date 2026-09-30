@@ -64,7 +64,7 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 		--photo-width: min(100vw, 560px);
 		/* Room for the fixed header, plus some air so the head is never cut off */
 		padding-top: calc(var(--header-height) + var(--space-4));
-		background: var(--color-bg);
+		background: var(--bg);
 	}
 
 	.hero-photo {
@@ -84,15 +84,6 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 		width: 100%;
 		object-fit: contain;
 		object-position: top;
-	}
-
-	/* Lower part of the photo runs into the page colour, so photo and text read as one unit */
-	.hero-photo::after {
-		content: '';
-		position: absolute;
-		inset: 45% 0 0;
-		background: linear-gradient(to bottom, transparent, var(--color-bg) 85%);
-		pointer-events: none;
 	}
 
 	/* Showreel play button, level with the fanned cards */
@@ -115,7 +106,7 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 		height: 3.5rem;
 		border: 1px solid var(--color-accent);
 		border-radius: 50%;
-		background: rgb(11 20 38 / 0.6);
+		background: var(--color-button-glass);
 		color: var(--color-accent);
 		transition:
 			background-color var(--duration-fast),
@@ -142,7 +133,7 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 		color: var(--color-accent);
 	}
 
-	/* Phones: text block overlaps the faded lower part of the photo */
+	/* Phones: text block overlaps the lower part of the photo, where the legs fade out */
 	.hero-content {
 		position: relative;
 		margin-top: calc(var(--photo-width) * -0.3);
@@ -218,10 +209,6 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 			max-width: var(--photo-width);
 			margin: 0;
 			justify-self: end;
-		}
-
-		.hero-photo::after {
-			inset: 70% 0 0;
 		}
 
 		.hero-content {

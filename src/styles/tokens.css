@@ -9,18 +9,25 @@
 
 :root {
 	/* Colours */
-	--color-bg: #0b1426; /* matches the hero photo background exactly */
-	--color-surface: #121e36;
+	--bg: #1c2a4a; /* page background */
+	--bg-deep: #0b1426; /* alternating sections, so neighbouring sections stand apart */
+	--color-surface: #243357; /* cards, one step lighter than --bg */
 	--color-accent: #d9d4c7; /* silver / champagne */
 	--color-accent-hover: #ebe7de;
-	--color-on-accent: #0b1426;
+	--color-navy: #0b1426;
+	--color-on-accent: var(--color-navy);
 	--color-text: #e9e6df;
 	--color-text-muted: rgb(233 230 223 / 0.75);
-	--color-text-faint: rgb(233 230 223 / 0.58);
+	--color-text-faint: rgb(233 230 223 / 0.62);
 	--color-border: rgb(217 212 199 / 0.18);
 	--color-border-strong: rgb(217 212 199 / 0.4);
 	--color-border-subtle: rgb(217 212 199 / 0.12);
-	--color-header-bg: #060b16; /* darker than the hero */
+	--color-header-bg: #e9e6df; /* light header */
+	--color-header-text: var(--color-navy);
+	--color-bar-bg: rgb(11 20 38 / 0.96); /* mobile booking bar */
+	--color-overlay: rgb(11 20 38 / 0.9); /* lightbox backdrop */
+	--color-button-glass: rgb(11 20 38 / 0.6); /* round buttons over photos */
+	--shadow-card: 0 10px 30px rgb(0 0 0 / 0.45);
 
 	/* Type scale, mobile first */
 	--text-xs: 0.8125rem;

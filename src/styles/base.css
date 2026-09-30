@@ -18,7 +18,7 @@ body {
 	font-size: var(--text-base);
 	line-height: var(--leading-body);
 	color: var(--color-text);
-	background: var(--color-bg);
+	background: var(--bg);
 	-webkit-font-smoothing: antialiased;
 	/* Cormorant defaults to old-style figures; keep numbers like "10" lining */
 	font-variant-numeric: lining-nums;
@@ -84,7 +84,7 @@ a:hover {
 }
 
 .section-alt {
-	background: var(--color-surface);
+	background: var(--bg-deep);
 }
 
 /* Kicker above headings */

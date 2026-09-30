@@ -64,17 +64,41 @@ const links = [
 		document.addEventListener('keydown', (event) => {
 			if (event.key === 'Escape') setOpen(false);
 		});
+
+		// Mark the menu item of the section currently in view as active
+		const links = [...menu.querySelectorAll<HTMLAnchorElement>('a[href*="#"]')];
+		const sections = links
+			.map((link) => document.getElementById(link.hash.slice(1)))
+			.filter((section): section is HTMLElement => Boolean(section));
+		const spy = new IntersectionObserver(
+			(entries) => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					for (const link of links) {
+						if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'true');
+						else link.removeAttribute('aria-current');
+					}
+				}
+			},
+			{ rootMargin: '-45% 0px -50% 0px' },
+		);
+		sections.forEach((section) => spy.observe(section));
 	}
 </script>
 
 <style>
-	/* Opaque and darker than the hero, so scrolled content never shows behind logo and nav */
+	/* Opaque light header, so scrolled content never shows behind logo and nav */
 	.navbar {
 		position: fixed;
 		inset: 0 0 auto;
 		z-index: 10;
+		color: var(--color-header-text);
 		background: var(--color-header-bg);
-		border-bottom: 1px solid var(--color-border-subtle);
+	}
+
+	/* Focus ring in navy, the light accent would vanish on the light header */
+	.navbar :focus-visible {
+		outline-color: var(--color-header-text);
 	}
 
 	.navbar-inner {
@@ -96,7 +120,6 @@ const links = [
 		font-size: var(--text-lead-min);
 		font-weight: var(--weight-display);
 		line-height: 1;
-		color: var(--color-text);
 	}
 
 	.brand-role {
@@ -106,11 +129,10 @@ const links = [
 		line-height: 1;
 		letter-spacing: var(--tracking-logo);
 		text-transform: uppercase;
-		color: var(--color-accent);
 	}
 
-	.brand:hover .brand-name {
-		color: var(--color-accent);
+	.brand {
+		color: inherit;
 	}
 
 	/* Hamburger button with a full tap target */
@@ -124,7 +146,7 @@ const links = [
 		padding: 0;
 		border: none;
 		background: none;
-		color: var(--color-text);
+		color: inherit;
 		cursor: pointer;
 	}
 
@@ -187,15 +209,20 @@ const links = [
 		padding: 0 var(--space-3);
 		font-size: var(--text-sm);
 		letter-spacing: 0.04em;
-		color: var(--color-text-muted);
-		text-decoration: none;
-		transition: color var(--duration-fast);
+		color: inherit;
+		text-decoration: underline;
+		text-decoration-color: transparent;
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.35em;
+		transition: text-decoration-color var(--duration-fast);
 	}
 
+	/* Hover and active item: fine navy underline */
 	.menu a:hover,
 	.menu a:focus-visible,
 	.menu a[aria-current] {
-		color: var(--color-accent);
+		color: inherit;
+		text-decoration-color: currentColor;
 	}
 
 	/* Mobile with JS: menu collapses behind the hamburger (without JS the links stay visible) */
@@ -209,7 +236,6 @@ const links = [
 			position: absolute;
 			inset: 100% 0 auto;
 			background: var(--color-header-bg);
-			border-bottom: 1px solid var(--color-border-subtle);
 		}
 
 		:global(.js) .is-open .menu {

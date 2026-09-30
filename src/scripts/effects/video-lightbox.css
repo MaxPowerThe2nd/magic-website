@@ -10,12 +10,12 @@
 }
 
 .video-lightbox::backdrop {
-	background: rgb(6 11 22 / 0.9);
+	background: var(--color-overlay);
 }
 
 .video-lightbox-frame {
 	aspect-ratio: 16 / 9;
-	background: var(--color-header-bg);
+	background: var(--bg-deep);
 }
 
 .video-lightbox-frame iframe,
@@ -40,7 +40,7 @@
 	font-size: 1.75rem;
 	line-height: 1;
 	color: var(--color-text);
-	background: var(--color-header-bg);
+	background: var(--bg-deep);
 	cursor: pointer;
 }
 
