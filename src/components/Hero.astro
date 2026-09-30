@@ -22,8 +22,10 @@ import heroPortrait from '../images/hero-portrait.webp';
 
 		<div class="hero-content">
 			<p class="eyebrow">Zauberkünstler &amp; Entertainer</p>
-			<h1 class="stage-name">Reinhard Hütter</h1>
-			<p class="claim">Magie auf dem silbernen Tablett</p>
+			<!-- The name is only visible in the logo; it stays in the heading for search engines -->
+			<h1 class="claim">
+				<span class="visually-hidden">Reinhard Hütter – </span>Magie auf dem silbernen Tablett
+			</h1>
 			<a class="button" href="#kontakt">Show anfragen</a>
 		</div>
 	</div>
@@ -31,55 +33,83 @@ import heroPortrait from '../images/hero-portrait.webp';
 
 <style>
 	.hero {
-		/* Room for the fixed header */
-		padding-top: var(--header-height);
+		/* Photo is limited on tablets so it does not grow endlessly */
+		--photo-width: min(100vw, 560px);
+		/* Room for the fixed header, plus some air so the head is never cut off */
+		padding-top: calc(var(--header-height) + var(--space-4));
 		background: var(--color-bg);
+	}
+
+	.hero-photo {
+		position: relative;
+		width: var(--photo-width);
+		margin: 0 auto;
 	}
 
 	.hero-photo :global(.portrait) {
 		width: 100%;
+		object-fit: contain;
+		object-position: top;
 	}
 
-	/* Text sits on the plain lower part of the photo, where the legs fade out */
+	/* Lower part of the photo runs into the page colour, so photo and text read as one unit */
+	.hero-photo::after {
+		content: '';
+		position: absolute;
+		inset: 45% 0 0;
+		background: linear-gradient(to bottom, transparent, var(--color-bg) 85%);
+		pointer-events: none;
+	}
+
+	/* Mobile: text block overlaps the faded lower part of the photo */
 	.hero-content {
 		position: relative;
-		margin-top: calc(var(--space-8) * -1.5);
+		max-width: var(--photo-width);
+		margin: calc(var(--photo-width) * -0.3) auto 0;
 		padding: 0 var(--gutter) var(--section-space);
 	}
 
-	.stage-name {
-		margin: 0 0 var(--space-3);
-		font-size: var(--text-h2);
+	.hero-content .eyebrow {
+		margin-bottom: var(--space-2);
 	}
 
 	.claim {
-		margin: 0 0 var(--space-6);
-		font-family: var(--font-display);
-		font-size: var(--text-lead);
+		margin: 0 0 var(--space-7);
+		font-size: var(--text-display);
 		font-style: italic;
+		font-weight: var(--weight-display-light);
 		line-height: var(--leading-tight);
 		color: var(--color-accent);
 	}
 
-	/* Side by side on large screens: text left, portrait right */
+	/* Desktop: text vertically centred beside the figure, left edge in line with the logo */
 	@media (min-width: 960px) {
 		.hero-inner {
 			display: grid;
 			grid-template-columns: 1fr 540px;
-			align-items: end;
+			align-items: center;
 			max-width: calc(var(--content-width) + 2 * var(--gutter));
 			margin: 0 auto;
-			padding: var(--space-6) var(--gutter) 0;
+			padding: 0 var(--gutter);
+		}
+
+		.hero {
+			--photo-width: 540px;
 		}
 
 		.hero-photo {
 			order: 2;
 		}
 
+		.hero-photo::after {
+			inset: 70% 0 0;
+		}
+
 		.hero-content {
 			order: 1;
+			max-width: none;
 			margin: 0;
-			padding: 0 0 var(--section-space);
+			padding: 0;
 		}
 	}
 </style>
