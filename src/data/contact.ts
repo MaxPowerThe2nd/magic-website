@@ -10,3 +10,7 @@ export const contact = {
 
 export const phoneHref = `tel:${contact.phoneLink}`;
 export const emailHref = `mailto:${contact.email}`;
+
+// Endpoint that receives the enquiry form (POST). Not decided yet, so nothing is sent anywhere.
+// TODO: [TODO: Formular-Dienst] – set the URL of the chosen form service here.
+export const formEndpoint: string | undefined = undefined;

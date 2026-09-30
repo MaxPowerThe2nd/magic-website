@@ -1,6 +1,7 @@
 ---
-// Structured enquiry form; behaviour in src/scripts/effects/enquiry-form.ts
-import { emailHref } from '../data/contact';
+// Structured enquiry form; validation and sending in src/scripts/effects/enquiry-form.ts.
+// Until a form service is set in src/data/contact.ts nothing is sent and no success is shown.
+import { formEndpoint } from '../data/contact';
 
 const occasions = ['Firmenevent', 'Hochzeit', 'Privatfeier', 'Restaurant', 'Scheidung', 'Sonstiges'];
 const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch offen, bitte beraten'];
@@ -9,11 +10,11 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 <div class="enquiry" id="anfrage">
 	<form
 		class="form"
-		action={emailHref}
+		action={formEndpoint}
 		method="post"
-		enctype="text/plain"
 		data-effect="enquiry-form"
 		data-confirmation="enquiry-confirmation"
+		data-status="enquiry-status"
 	>
 		<div class="field">
 			<label for="enquiry-date">Datum</label>
@@ -35,7 +36,15 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 
 		<div class="field">
 			<label for="enquiry-guests">Gästeanzahl</label>
-			<input id="enquiry-guests" name="gaeste" type="number" min="1" inputmode="numeric" />
+			<input
+				id="enquiry-guests"
+				name="gaeste"
+				type="number"
+				min="1"
+				inputmode="numeric"
+				data-error-range="Bitte geben Sie mindestens einen Gast an."
+			/>
+			<p class="field-error" id="enquiry-guests-error" hidden></p>
 		</div>
 
 		<div class="field field-wide">
@@ -53,12 +62,29 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 
 		<div class="field">
 			<label for="enquiry-name">Name <span aria-hidden="true">*</span></label>
-			<input id="enquiry-name" name="name" type="text" autocomplete="name" required />
+			<input
+				id="enquiry-name"
+				name="name"
+				type="text"
+				autocomplete="name"
+				required
+				data-error-missing="Bitte geben Sie Ihren Namen an."
+			/>
+			<p class="field-error" id="enquiry-name-error" hidden></p>
 		</div>
 
 		<div class="field">
 			<label for="enquiry-email">E-Mail <span aria-hidden="true">*</span></label>
-			<input id="enquiry-email" name="email" type="email" autocomplete="email" required />
+			<input
+				id="enquiry-email"
+				name="email"
+				type="email"
+				autocomplete="email"
+				required
+				data-error-missing="Bitte geben Sie Ihre E-Mail-Adresse an."
+				data-error-type="Bitte geben Sie eine gültige E-Mail-Adresse an, z. B. name@beispiel.at."
+			/>
+			<p class="field-error" id="enquiry-email-error" hidden></p>
 		</div>
 
 		<div class="field">
@@ -68,8 +94,24 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 
 		<div class="field field-wide form-footer">
 			<p class="required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
-			<button class="button" type="submit">Anfrage senden</button>
+			<!-- Without a form service the button stays disabled when JS is off -->
+			<button class="button" type="submit" disabled={!formEndpoint}>Anfrage senden</button>
 		</div>
+
+		{
+			!formEndpoint && (
+				<p class="field-wide">
+					<span class="placeholder-note">[TODO: Formular-Dienst]</span>
+				</p>
+			)
+		}
+
+		<p class="field-wide privacy-note">
+			Ihre Angaben verwende ich nur, um Ihre Anfrage zu beantworten. Mehr dazu in der{' '}
+			<a href="/datenschutz">Datenschutzerklärung</a>.
+		</p>
+
+		<p class="field-wide form-status" id="enquiry-status" role="alert" hidden></p>
 	</form>
 
 	<p class="confirmation" id="enquiry-confirmation" role="status" tabindex="-1" hidden>
@@ -134,6 +176,43 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 		justify-content: space-between;
 		gap: var(--space-4);
 		margin-top: var(--space-2);
+	}
+
+	.field-error {
+		margin: 0;
+		font-size: var(--text-sm);
+		color: var(--color-accent);
+	}
+
+	.field-error::before {
+		content: '! ';
+		font-weight: 600;
+	}
+
+	input[aria-invalid='true'],
+	select[aria-invalid='true'],
+	textarea[aria-invalid='true'] {
+		border-color: var(--color-accent);
+		border-width: 2px;
+	}
+
+	.button:disabled {
+		cursor: not-allowed;
+		opacity: 0.6;
+	}
+
+	.privacy-note,
+	.form-status {
+		margin: 0;
+		font-size: var(--text-sm);
+		color: var(--color-text-muted);
+	}
+
+	.form-status {
+		padding: var(--space-4);
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		color: var(--color-text);
 	}
 
 	.required-note {
