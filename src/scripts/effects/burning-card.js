@@ -3,8 +3,8 @@
 //
 // Timeline (starts shortly after the page has loaded, as soon as the card is >= 50% visible;
 // restarts on every page load):
-//   ignite  1 s   a small glowing dot at the corner
-//   burn   11 s   the burn edge eats diagonally inwards, slowly at first and ever faster,
+//   ignite 0.4 s  a small glowing dot at the corner
+//   burn    8 s   the burn edge eats diagonally inwards, visibly from the start and ever faster,
 //                 like real paper; the flames grow with it
 //   fade    2 s   the flames calm down to a small afterburn
 //   afterburn     low flames keep flickering on the burnt edge, now and then one goes out
@@ -26,9 +26,9 @@ const TEX_H = 420;
 const CORNER_X = 0.38;
 const CORNER_Y = 0.42;
 
-const START_DELAY_MS = 600;
-const IGNITE_MS = 1000;
-const BURN_MS = 11000;
+const START_DELAY_MS = 150;
+const IGNITE_MS = 400;
+const BURN_MS = 8000;
 const FADE_MS = 2000;
 
 // Widths of the burn edge zones, in normalized burn distance (1 = final corner size)
@@ -370,8 +370,9 @@ function start(root, canvas, image, reducedMotion) {
 			ignition = elapsed / IGNITE_MS;
 		} else if (phase === 'burn') {
 			const p = Math.min(1, (elapsed - IGNITE_MS) / BURN_MS);
-			// Slow at first and ever faster, like paper that burns
-			front = lerp(minBurnTime, 1, burnCurve(p));
+			// The burnt AREA follows the accelerating curve; the area grows with the square of the
+			// front distance, so the front uses its square root and moves visibly from the start
+			front = lerp(minBurnTime, 1, Math.sqrt(burnCurve(p)));
 			// The fire grows as it speeds up
 			flameHeight = lerp(FLAME_H_START, FLAME_H_PEAK, Math.pow(p, 0.9));
 			flameAlpha = Math.min(1, p * 10);
@@ -490,10 +491,10 @@ function lerp(a, b, t) {
 	return a + (b - a) * t;
 }
 
-// Burn progress: slow start that keeps accelerating
+// Burnt area over time: burns right away and keeps accelerating
 function burnCurve(t) {
 	const x = Math.min(1, Math.max(0, t));
-	return 0.12 * x + 0.88 * Math.pow(x, 2.3);
+	return 0.32 * x + 0.68 * Math.pow(x, 2);
 }
 
 function easeOut(t) {
