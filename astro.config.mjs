@@ -3,6 +3,11 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+	// Former subpages now live as sections on the one-pager
+	redirects: {
+		'/gallerie': '/#fotos',
+		'/kontakt': '/#kontakt',
+	},
 	// Fonts are downloaded at build time and served from this site, never from Google
 	fonts: [
 		{
