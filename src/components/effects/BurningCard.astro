@@ -1,31 +1,26 @@
 ---
-// Burning playing card: pre-rendered card image with a burnt, glowing top edge,
-// real flame footage on black (blended with mix-blend-mode: screen) and CSS embers.
+// Burning playing card, rendered in a <canvas> by src/scripts/effects/burning-card.js:
+// the intact ace catches fire at its top right corner, burns away a frayed corner in ~10 s,
+// then keeps smouldering. The flame footage is drawn into the canvas (black turned into
+// transparency), so no mix-blend-mode is needed and the card may float like the others.
+//
+// Without JS the intact card is shown as a normal image. The canvas is larger than the
+// card (extra room above and to the right) to leave space for the flames.
 // Assets: /public/effects/burning-card/
-//
-// Behaviour (src/scripts/effects/burning-card.js): the card flares up once when it first
-// becomes visible, then keeps smouldering. On desktop, hovering makes it flare up again.
-// Without JS or with reduced motion only the card image with its glowing edge is shown.
-//
-// IMPORTANT: mix-blend-mode only blends with the backdrop of the nearest stacking
-// context. Neither .burning-card nor any ancestor between it and the hero background
-// may create a stacking context (no transform, opacity < 1, filter, z-index, isolation,
-// will-change). Otherwise the black video background shows up as a black rectangle.
 const base = '/effects/burning-card';
 ---
 
 <div class="burning-card" data-effect="burning-card" aria-hidden="true">
-	<div class="burning-card__glow"></div>
 	<img
-		class="burning-card__card"
-		src={`${base}/card-burning.webp`}
-		width="381"
-		height="474"
+		class="burning-card__fallback"
+		src={`${base}/card-intact.webp`}
+		width="150"
+		height="210"
 		alt=""
 		decoding="async"
 	/>
-	<!-- The poster only bridges the moment until playback starts; at rest the video is invisible -->
-	<video class="burning-card__flames" muted loop playsinline preload="auto" poster={`${base}/flame-poster.jpg`}>
+	<canvas class="burning-card__canvas"></canvas>
+	<video class="burning-card__video" muted loop playsinline preload="auto">
 		<source src={`${base}/flame-loop.webm`} type="video/webm" />
 		<source src={`${base}/flame-loop.mp4`} type="video/mp4" />
 	</video>
@@ -33,148 +28,69 @@ const base = '/effects/burning-card';
 
 <style>
 	.burning-card {
-		/* Size of the whole element; the card image is pre-rotated by 12deg. */
-		--burning-card-width: 190px;
+		/* Width of the card itself; the canvas around it is larger */
+		--burning-card-width: 150px;
 		position: absolute;
 		width: var(--burning-card-width);
-		aspect-ratio: 381 / 474;
+		aspect-ratio: 150 / 210;
 		pointer-events: none;
+		animation: burning-card-float 17s ease-in-out -4s infinite alternate;
 	}
 
-	.burning-card__card {
+	/* Without JS: the intact card, tilted like the canvas version */
+	.burning-card__fallback {
 		position: absolute;
 		inset: 0;
 		width: 100%;
 		height: 100%;
+		transform: rotate(-12deg);
 	}
 
-	/* Flames: anchor point (50% / 90% of the video) sits on the burn edge, rotated with the card.
-	   Invisible at rest; shown only while the card is burning. */
-	.burning-card__flames {
+	/* Canvas: 20% extra on the left, 60% on the right, 80% above and 15% below the card box.
+	   The script mirrors these values (CANVAS_MARGIN). */
+	.burning-card__canvas {
 		position: absolute;
-		left: 42%;
-		top: 31%;
-		width: 118%;
-		aspect-ratio: 640 / 400;
-		transform-origin: 50% 90%;
-		transform: translate(-50%, -90%) rotate(-12deg);
-		mix-blend-mode: screen;
-		/* The video is wider than the card: only show flames above the burn edge, fading out
-		   softly over the card corners. The mask follows the rotated video, i.e. the card edge. */
-		-webkit-mask-image: linear-gradient(to right, transparent 19%, #000 27%, #000 78%, transparent 86%);
-		mask-image: linear-gradient(to right, transparent 19%, #000 27%, #000 78%, transparent 86%);
-		opacity: 0;
-		transition: opacity 1.5s ease-out;
+		left: -20%;
+		top: -80%;
+		width: 180%;
+		height: 195%;
+		display: none;
 	}
 
-	.burning-card.is-burning .burning-card__flames {
-		opacity: 1;
-		transition-duration: 0.4s;
+	.burning-card.is-ready .burning-card__canvas {
+		display: block;
 	}
 
-	/* Warm light around the fire: hidden at rest, flickers while burning, pulses while smouldering. */
-	.burning-card__glow {
+	.burning-card.is-ready .burning-card__fallback {
+		display: none;
+	}
+
+	/* The video is only a frame source for the canvas */
+	.burning-card__video {
 		position: absolute;
-		left: 44.8%;
-		top: 30.2%;
-		width: 160%;
-		aspect-ratio: 5 / 4;
-		transform: translate(-50%, -62%);
-		background: radial-gradient(closest-side, var(--color-fire-core), var(--color-fire-edge) 55%, transparent);
-		mix-blend-mode: screen;
+		width: 1px;
+		height: 1px;
 		opacity: 0;
-		transition: opacity 1.5s ease-out;
 	}
 
-	.burning-card.is-burning .burning-card__glow {
-		opacity: 0.85;
-		transition-duration: 0.4s;
-		animation: burning-card-flicker 2.4s infinite;
-	}
-
-	.burning-card.is-smoldering:not(.is-burning) .burning-card__glow {
-		opacity: 0.35;
-		animation: burning-card-pulse 4s ease-in-out infinite;
-	}
-
-	@keyframes burning-card-flicker {
-		0%,
-		100% {
-			opacity: 0.85;
-		}
-		18% {
-			opacity: 1;
-		}
-		33% {
-			opacity: 0.75;
-		}
-		52% {
-			opacity: 0.95;
-		}
-		70% {
-			opacity: 0.8;
-		}
-		86% {
-			opacity: 1;
-		}
-	}
-
-	@keyframes burning-card-pulse {
-		0%,
-		100% {
-			opacity: 0.35;
-		}
-		50% {
-			opacity: 0.2;
-		}
-	}
-
-	/* Embers are created by src/scripts/effects/burning-card.js */
-	.burning-card :global(.burning-card__ember) {
-		position: absolute;
-		width: 3px;
-		height: 3px;
-		border-radius: 50%;
-		background: var(--color-ember);
-		box-shadow: 0 0 6px 2px var(--color-ember-glow);
-		opacity: 0;
-		animation: burning-card-rise var(--d) linear var(--delay) infinite;
-	}
-
-	@keyframes burning-card-rise {
+	/* Gentle drift, like the floating card backs */
+	@keyframes burning-card-float {
 		0% {
-			opacity: 0;
-			transform: translate(0, 0) scale(1);
+			transform: translate(0, 0) rotate(0deg);
 		}
-		10% {
-			opacity: 1;
+
+		50% {
+			transform: translate(3%, -3%) rotate(1.5deg);
 		}
-		70% {
-			opacity: 0.8;
-		}
+
 		100% {
-			opacity: 0;
-			transform: translate(var(--dx), -150px) scale(0.5);
+			transform: translate(-2%, 2%) rotate(-1deg);
 		}
 	}
 
-	/* Desktop only: the card surface reacts to hover (flares up again) */
-	@media (hover: hover) and (pointer: fine) {
-		.burning-card__card {
-			pointer-events: auto;
-		}
-	}
-
-	/* Reduced motion: no video, no glow, no embers; only the card with its glowing edge */
 	@media (prefers-reduced-motion: reduce) {
-		.burning-card__flames,
-		.burning-card__glow,
-		.burning-card :global(.burning-card__ember) {
-			display: none;
-		}
-
-		.burning-card__card {
-			pointer-events: none;
+		.burning-card {
+			animation: none;
 		}
 	}
 </style>

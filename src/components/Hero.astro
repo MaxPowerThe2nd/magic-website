@@ -147,19 +147,18 @@ const points = ['Über 10 Jahre Erfahrung', 'Tischzauberei & Salon-Show', 'Verbl
 	}
 
 	/* Burning card: left of the figure, in the gap between text and person, at body height.
-	   Only left/top/width are set here; the card must not get a transform or z-index
-	   (its flames rely on mix-blend-mode against the hero background). */
+	   The width is the card itself; its canvas adds room above and to the right for the flames. */
 	.hero-photo :global(.burning-card) {
-		--burning-card-width: 26%;
-		left: 1%;
-		top: 34%;
+		--burning-card-width: 20%;
+		left: 4%;
+		top: 38%;
 	}
 
 	@media (min-width: 960px) {
 		.hero-photo :global(.burning-card) {
-			--burning-card-width: 32%;
-			left: -12%;
-			top: 40%;
+			--burning-card-width: 26%;
+			left: -8%;
+			top: 44%;
 		}
 	}
 
