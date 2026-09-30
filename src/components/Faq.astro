@@ -1,0 +1,119 @@
+---
+const questions = [
+	{
+		question: 'Wie lange dauert ein Auftritt?',
+		answer:
+			'Ganz nach Anlass: von einer kurzen Show mit 20 Minuten bis zu mehreren Stunden Table Hopping. Wir stimmen das gemeinsam auf Ihren Ablauf ab.',
+	},
+	{
+		question: 'Brauche ich eine Bühne?',
+		answer:
+			'Nein. Close-up-Magie und Table Hopping funktionieren direkt zwischen Ihren Gästen. Für eine Show im Salonstil genügt eine kleine freie Fläche.',
+	},
+	{
+		question: 'Für wie viele Gäste eignet sich das?',
+		answer:
+			'Vom kleinen Kreis im Wohnzimmer bis zur Firmenfeier mit mehreren hundert Gästen. Je nach Größe empfehle ich das passende Format.',
+	},
+	{
+		question: 'Was kostet ein Auftritt?',
+		answer:
+			'Das hängt von Dauer, Format und Anreise ab. Schreiben Sie mir kurz Ihren Anlass – Sie erhalten ein unverbindliches Angebot.',
+	},
+	{
+		question: 'Können Sie auch meinen Chef verschwinden lassen?',
+		answer:
+			'Leider nein – das wäre auch arbeitsrechtlich heikel. Aber für ein paar Minuten vergisst er garantiert die Quartalszahlen.',
+	},
+];
+---
+
+<section class="section" id="faq">
+	<div class="section-inner faq">
+		<div>
+			<p class="eyebrow">FAQ</p>
+			<h2 class="section-title">Gut zu wissen</h2>
+		</div>
+
+		<div class="questions">
+			{
+				questions.map(({ question, answer }) => (
+					<details>
+						<summary>{question}</summary>
+						<p>{answer}</p>
+					</details>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.faq {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.questions {
+		max-width: 44rem;
+	}
+
+	details {
+		border-bottom: 1px solid rgb(214 178 94 / 0.3);
+	}
+
+	summary {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		min-height: 3.5rem;
+		padding: 0.75rem 0;
+		font-family: var(--font-display);
+		font-size: 1.1875rem;
+		font-weight: 600;
+		cursor: pointer;
+		list-style: none;
+	}
+
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
+	summary::after {
+		content: '+';
+		flex-shrink: 0;
+		font-family: var(--font-body);
+		font-size: 1.5rem;
+		font-weight: 400;
+		color: var(--color-gold);
+		transition: transform 0.2s;
+	}
+
+	details[open] summary::after {
+		transform: rotate(45deg);
+	}
+
+	summary:focus-visible {
+		outline: 2px solid var(--color-gold);
+		outline-offset: 2px;
+	}
+
+	details p {
+		margin: 0 0 1.25rem;
+		color: rgb(244 236 216 / 0.85);
+	}
+
+	@media (min-width: 960px) {
+		.faq {
+			grid-template-columns: 1fr 1.6fr;
+			gap: 4rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		summary::after {
+			transition: none;
+		}
+	}
+</style>

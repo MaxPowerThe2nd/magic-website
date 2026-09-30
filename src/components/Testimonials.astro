@@ -1,0 +1,83 @@
+---
+// Placeholder quotes: replace with real client feedback before going live
+const testimonials = [
+	{
+		quote: 'Unsere Gäste sprechen heute noch davon. Genau die richtige Mischung aus Staunen und Lachen.',
+		name: 'Name',
+		occasion: 'Firmenfeier',
+	},
+	{
+		quote: 'Beim Sektempfang war plötzlich niemand mehr am Handy. Das hat es bei uns noch nie gegeben.',
+		name: 'Name',
+		occasion: 'Hochzeit',
+	},
+	{
+		quote: 'Charmant, witzig und unglaublich nah dran. Ich weiß bis heute nicht, wie das funktioniert hat.',
+		name: 'Name',
+		occasion: 'Geburtstag',
+	},
+];
+---
+
+<section class="section" id="stimmen">
+	<div class="section-inner">
+		<p class="eyebrow">Stimmen</p>
+		<h2 class="section-title">Was Gäste sagen</h2>
+		<p><span class="placeholder-note">Beispieltexte – werden durch echte Stimmen ersetzt</span></p>
+
+		<ul class="quotes">
+			{
+				testimonials.map(({ quote, name, occasion }) => (
+					<li>
+						<figure>
+							<blockquote>„{quote}“</blockquote>
+							<figcaption>
+								{name} · {occasion}
+							</figcaption>
+						</figure>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.quotes {
+		display: grid;
+		gap: 1.5rem;
+		margin: 2rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	figure {
+		height: 100%;
+		margin: 0;
+		padding: 1.75rem 1.5rem;
+		border-left: 2px solid var(--color-gold);
+		background: rgb(19 33 63 / 0.6);
+		border-radius: 0 var(--radius) var(--radius) 0;
+	}
+
+	blockquote {
+		margin: 0 0 1.25rem;
+		font-family: var(--font-display);
+		font-size: 1.25rem;
+		font-style: italic;
+		line-height: 1.45;
+	}
+
+	figcaption {
+		font-size: var(--text-small);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-gold);
+	}
+
+	@media (min-width: 960px) {
+		.quotes {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+</style>

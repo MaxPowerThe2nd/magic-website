@@ -1,0 +1,100 @@
+---
+import { Picture } from 'astro:assets';
+import profilePic from '../images/home-profilepic.webp';
+---
+
+<section class="hero" id="hero" data-hero>
+	<div class="hero-inner">
+		<div class="hero-photo">
+			<Picture
+				class="portrait"
+				src={profilePic}
+				alt="Reinhard Hütter im dunklen Anzug mit Zauberstab und aufgefächerten Spielkarten"
+				formats={['avif', 'webp']}
+				fallbackFormat="webp"
+				widths={[400, 800, 1254]}
+				sizes="(min-width: 960px) 560px, 100vw"
+				loading="eager"
+				fetchpriority="high"
+			/>
+		</div>
+
+		<div class="hero-content">
+			<p class="eyebrow">Zauberkünstler &amp; Entertainer</p>
+			<h1 class="stage-name">Reinhard Hütter</h1>
+			<p class="tagline">Magie auf dem silbernen Tablett</p>
+			<a class="button" href="#kontakt">Show anfragen</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	/* Dark blue matches the background of the portrait photo */
+	.hero {
+		position: relative;
+		overflow: hidden;
+		background: linear-gradient(to bottom, #020914 60%, var(--color-midnight));
+	}
+
+	/* Photo fades out at the bottom so the text below sits on a smooth background */
+	.hero-photo :global(.portrait) {
+		width: 100%;
+		mask-image: linear-gradient(to bottom, #000 55%, transparent 98%);
+	}
+
+	/* Text overlaps the dark lower part of the photo */
+	.hero-content {
+		position: relative;
+		margin-top: -5.5rem;
+		padding: 0 1.25rem 4rem;
+	}
+
+	.stage-name {
+		margin: 0 0 0.75rem;
+		font-size: var(--text-display);
+		color: var(--color-gold);
+	}
+
+	.tagline {
+		margin: 0 0 2rem;
+		font-family: var(--font-display);
+		font-size: var(--text-lead);
+		font-style: italic;
+		line-height: 1.4;
+	}
+
+	@media (min-width: 720px) {
+		.hero-content {
+			margin-top: -8rem;
+			padding: 0 2.5rem 5rem;
+		}
+	}
+
+	/* Side by side on large screens: text left, portrait right */
+	@media (min-width: 960px) {
+		.hero-inner {
+			display: grid;
+			grid-template-columns: 1fr 560px;
+			align-items: center;
+			max-width: 1120px;
+			min-height: 100svh;
+			margin: 0 auto;
+			padding: 5rem 2.5rem 3rem;
+		}
+
+		.hero-photo {
+			order: 2;
+		}
+
+		/* Soften the square photo edges into the background */
+		.hero-photo :global(.portrait) {
+			mask-image: radial-gradient(ellipse 62% 62% at 50% 45%, #000 55%, transparent 100%);
+		}
+
+		.hero-content {
+			order: 1;
+			margin: 0;
+			padding: 0;
+		}
+	}
+</style>

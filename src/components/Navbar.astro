@@ -1,0 +1,232 @@
+---
+// Links point to the one-pager sections (in the order given in AGENTS.md)
+const links = [
+	{ href: '/#shows', label: 'Shows' },
+	{ href: '/#fotos', label: 'Fotos & Videos' },
+	{ href: '/#stimmen', label: 'Stimmen' },
+	{ href: '/#ueber-mich', label: 'Über mich' },
+	{ href: '/#faq', label: 'FAQ' },
+	{ href: '/#kontakt', label: 'Kontakt' },
+];
+---
+
+<header class="navbar" data-navbar>
+	<div class="navbar-inner">
+		<a class="brand" href="/">Reinhard Hütter</a>
+
+		<button
+			class="menu-toggle"
+			type="button"
+			aria-expanded="false"
+			aria-controls="main-menu"
+			data-menu-toggle
+		>
+			<span class="visually-hidden">Menü</span>
+			<span class="menu-icon" aria-hidden="true"></span>
+		</button>
+
+		<nav id="main-menu" class="menu" aria-label="Hauptmenü" data-menu>
+			<ul>
+				{
+					links.map(({ href, label }) => (
+						<li>
+							<a href={href}>{label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<script>
+	const navbar = document.querySelector<HTMLElement>('[data-navbar]');
+	const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+	const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+	if (navbar && toggle && menu) {
+		const setOpen = (open: boolean) => {
+			toggle.setAttribute('aria-expanded', String(open));
+			navbar.classList.toggle('is-open', open);
+		};
+
+		toggle.addEventListener('click', () => {
+			setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+		});
+
+		// Close the mobile menu after choosing a section or pressing Escape
+		menu.addEventListener('click', (event) => {
+			if ((event.target as HTMLElement).closest('a')) setOpen(false);
+		});
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') setOpen(false);
+		});
+
+		// Solid background once the page is scrolled
+		const onScroll = () => navbar.classList.toggle('is-scrolled', window.scrollY > 16);
+		onScroll();
+		window.addEventListener('scroll', onScroll, { passive: true });
+	}
+</script>
+
+<style>
+	.navbar {
+		position: fixed;
+		inset: 0 0 auto;
+		z-index: 10;
+		transition: background-color 0.3s;
+	}
+
+	.navbar.is-scrolled,
+	.navbar.is-open {
+		background: rgb(11 20 40 / 0.95);
+		box-shadow: 0 1px 0 rgb(214 178 94 / 0.25);
+	}
+
+	.navbar-inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+	}
+
+	.brand {
+		font-family: var(--font-display);
+		font-size: 1.25rem;
+		font-weight: 600;
+		color: var(--color-gold);
+		text-decoration: none;
+	}
+
+	/* Hamburger button: 48px tap target */
+	.menu-toggle {
+		display: grid;
+		place-items: center;
+		width: 48px;
+		height: 48px;
+		padding: 0;
+		border: none;
+		background: none;
+		color: var(--color-cream);
+		cursor: pointer;
+	}
+
+	.menu-icon,
+	.menu-icon::before,
+	.menu-icon::after {
+		display: block;
+		width: 24px;
+		height: 2px;
+		border-radius: 1px;
+		background: currentColor;
+		transition: transform 0.25s, opacity 0.25s;
+	}
+
+	.menu-icon {
+		position: relative;
+	}
+
+	.menu-icon::before,
+	.menu-icon::after {
+		content: '';
+		position: absolute;
+		left: 0;
+	}
+
+	.menu-icon::before {
+		top: -7px;
+	}
+
+	.menu-icon::after {
+		top: 7px;
+	}
+
+	/* Hamburger turns into an X when open */
+	.is-open .menu-icon {
+		background: transparent;
+	}
+
+	.is-open .menu-icon::before {
+		transform: translateY(7px) rotate(45deg);
+	}
+
+	.is-open .menu-icon::after {
+		transform: translateY(-7px) rotate(-45deg);
+	}
+
+	/* Mobile: menu drops down below the bar */
+	.menu {
+		display: none;
+		position: absolute;
+		inset: 100% 0 auto;
+		background: rgb(11 20 40 / 0.98);
+		border-bottom: 1px solid rgb(214 178 94 / 0.25);
+	}
+
+	.is-open .menu {
+		display: block;
+	}
+
+	.menu ul {
+		margin: 0;
+		padding: 0.5rem 0 1rem;
+		list-style: none;
+	}
+
+	.menu a {
+		display: flex;
+		align-items: center;
+		min-height: 52px;
+		padding: 0 1.25rem;
+		font-size: 1.125rem;
+		color: var(--color-cream);
+		text-decoration: none;
+	}
+
+	.menu a:hover,
+	.menu a:focus-visible {
+		color: var(--color-gold);
+	}
+
+	/* Large screens: links in one row, no hamburger */
+	@media (min-width: 960px) {
+		.navbar-inner {
+			padding: 0.75rem 2.5rem;
+		}
+
+		.menu-toggle {
+			display: none;
+		}
+
+		.menu {
+			display: block;
+			position: static;
+			background: none;
+			border: none;
+		}
+
+		.menu ul {
+			display: flex;
+			gap: 0.25rem;
+			padding: 0;
+		}
+
+		.menu a {
+			min-height: 44px;
+			padding: 0 0.75rem;
+			font-size: var(--text-small);
+			letter-spacing: 0.06em;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.navbar,
+		.menu-icon,
+		.menu-icon::before,
+		.menu-icon::after {
+			transition: none;
+		}
+	}
+</style>

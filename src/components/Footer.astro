@@ -1,0 +1,71 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+	<div class="footer-inner">
+		<p class="footer-name">Reinhard Hütter</p>
+		<p class="footer-tagline">Magie auf dem silbernen Tablett</p>
+		<nav aria-label="Rechtliches">
+			<a href="/impressum">Impressum</a>
+			<a href="/datenschutz">Datenschutz</a>
+		</nav>
+		<p class="copyright">© {year} Reinhard Hütter</p>
+	</div>
+</footer>
+
+<style>
+	.footer {
+		/* Extra space at the bottom so the mobile booking bar never covers content */
+		padding: 3rem 1.25rem 6.5rem;
+		border-top: 1px solid rgb(214 178 94 / 0.25);
+		text-align: center;
+	}
+
+	.footer-inner {
+		max-width: 1120px;
+		margin: 0 auto;
+	}
+
+	.footer-name {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		font-weight: 600;
+		color: var(--color-gold);
+	}
+
+	.footer-tagline {
+		margin: 0.25rem 0 1.5rem;
+		font-family: var(--font-display);
+		font-style: italic;
+		color: rgb(244 236 216 / 0.75);
+	}
+
+	nav {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+	}
+
+	nav a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 44px;
+		padding: 0 0.5rem;
+		font-size: var(--text-small);
+		color: var(--color-cream);
+	}
+
+	.copyright {
+		margin: 1rem 0 0;
+		font-size: var(--text-small);
+		color: rgb(244 236 216 / 0.55);
+	}
+
+	@media (min-width: 960px) {
+		.footer {
+			padding-bottom: 3rem;
+		}
+	}
+</style>

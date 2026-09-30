@@ -1,0 +1,61 @@
+<section class="section section-alt" id="ueber-mich">
+	<div class="section-inner about">
+		<div>
+			<p class="eyebrow">Über mich</p>
+			<h2 class="section-title">Hinter dem Vorhang</h2>
+		</div>
+
+		<div class="about-text">
+			<p class="about-lead">
+				Seien Sie gegrüßt! Ich bin Reinhard Hütter – Zauberkünstler, Entertainer und
+				leidenschaftlicher Geschichtenerzähler.
+			</p>
+			<p>
+				Seit 10 Jahren verbinde ich Magie mit Schauspiel: Jede Szene ist durchdacht, jeder Moment
+				hat Timing – und trotzdem bleibt Platz für das Unerwartete. Das Ergebnis ist Unterhaltung,
+				die erstaunt und zum Lachen bringt.
+			</p>
+			<p>
+				Am liebsten bin ich ganz nah dran: Close-up-Magie direkt vor Ihren Augen, Table Hopping
+				von Tisch zu Tisch oder eine Show im Salonstil für kleinere und mittlere Gesellschaften.
+			</p>
+			<p class="signature">Reinhard Hütter</p>
+		</div>
+	</div>
+</section>
+
+<style>
+	.about {
+		display: grid;
+		gap: 0.5rem;
+	}
+
+	.about-text {
+		max-width: 38rem;
+	}
+
+	.about-text p {
+		margin: 0 0 1.25rem;
+	}
+
+	.about-lead {
+		font-family: var(--font-display);
+		font-size: var(--text-lead);
+		line-height: 1.45;
+		color: var(--color-gold);
+	}
+
+	.signature {
+		font-family: var(--font-display);
+		font-size: 1.5rem;
+		font-style: italic;
+		color: var(--color-gold);
+	}
+
+	@media (min-width: 960px) {
+		.about {
+			grid-template-columns: 1fr 1.4fr;
+			gap: 4rem;
+		}
+	}
+</style>

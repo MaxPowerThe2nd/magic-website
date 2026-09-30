@@ -1,0 +1,63 @@
+<!-- Booking button that stays visible on mobile once the hero is scrolled past -->
+<div class="booking-bar" data-booking-bar>
+	<a class="button" href="/#kontakt">Show anfragen</a>
+</div>
+
+<script>
+	const bar = document.querySelector<HTMLElement>('[data-booking-bar]');
+	const hero = document.querySelector('[data-hero]');
+	const contact = document.querySelector('#kontakt');
+
+	if (bar) {
+		// Pages without a hero (e.g. Impressum) show the bar right away
+		let heroVisible = Boolean(hero);
+		let contactVisible = false;
+		const update = () => bar.classList.toggle('is-visible', !heroVisible && !contactVisible);
+
+		const observer = new IntersectionObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.target === hero) heroVisible = entry.isIntersecting;
+				if (entry.target === contact) contactVisible = entry.isIntersecting;
+			}
+			update();
+		});
+
+		if (hero) observer.observe(hero);
+		if (contact) observer.observe(contact);
+		update();
+	}
+</script>
+
+<style>
+	.booking-bar {
+		position: fixed;
+		inset: auto 0 0;
+		z-index: 9;
+		padding: 0.75rem 1.25rem calc(0.75rem + env(safe-area-inset-bottom));
+		background: rgb(11 20 40 / 0.95);
+		border-top: 1px solid rgb(214 178 94 / 0.25);
+		transform: translateY(110%);
+		transition: transform 0.3s;
+	}
+
+	.booking-bar.is-visible {
+		transform: translateY(0);
+	}
+
+	.booking-bar .button {
+		width: 100%;
+	}
+
+	/* Desktop has the navbar and enough room, so no bar there */
+	@media (min-width: 960px) {
+		.booking-bar {
+			display: none;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.booking-bar {
+			transition: none;
+		}
+	}
+</style>
