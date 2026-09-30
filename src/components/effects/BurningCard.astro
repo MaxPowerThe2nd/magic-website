@@ -1,9 +1,9 @@
 ---
 // Burning playing card, rendered in a <canvas> by src/scripts/effects/burning-card.js:
 // shortly after the page has loaded the intact ace catches fire at its top right corner,
-// burns away a frayed corner in ~10 s and then keeps burning lightly. Restarts on every load.
-// The flame footage is drawn into the canvas (black turned into transparency), so no
-// mix-blend-mode is needed and the card may float like the others.
+// burns away a frayed corner (slowly at first, then ever faster) and keeps burning lightly.
+// Restarts on every load. The flames are drawn procedurally in the canvas, anchored on the
+// burn edge, so no video and no mix-blend-mode are needed and the card may float.
 //
 // Without JS the intact card is shown as a normal image. The canvas is larger than the
 // card (extra room above and to the right) to leave space for the flames.
@@ -21,10 +21,6 @@ const base = '/effects/burning-card';
 		decoding="async"
 	/>
 	<canvas class="burning-card__canvas"></canvas>
-	<video class="burning-card__video" muted loop playsinline preload="auto">
-		<source src={`${base}/flame-loop.webm`} type="video/webm" />
-		<source src={`${base}/flame-loop.mp4`} type="video/mp4" />
-	</video>
 </div>
 
 <style>
@@ -66,13 +62,6 @@ const base = '/effects/burning-card';
 		display: none;
 	}
 
-	/* The video is only a frame source for the canvas */
-	.burning-card__video {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		opacity: 0;
-	}
 
 	/* Gentle drift, like the floating card backs */
 	@keyframes burning-card-float {
