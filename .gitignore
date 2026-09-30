@@ -29,3 +29,6 @@ src/images/cards-stage-child.jpg
 src/images/seilmagie-stage.jpg
 src/images/reinhard-freigestellt.png
 src/images/reinhard-ohne-kranz.png
+
+# wrangler local state
+.wrangler/
