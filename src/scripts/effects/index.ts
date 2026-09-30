@@ -4,6 +4,7 @@ type EffectModule = { init: (element: HTMLElement) => void };
 
 const effects: Record<string, () => Promise<EffectModule>> = {
 	'burning-card': () => import('./burning-card.js'),
+	'card-flip': () => import('./card-flip'),
 	cloche: () => import('./cloche'),
 	'enquiry-form': () => import('./enquiry-form'),
 	'floating-cards': () => import('./floating-cards'),

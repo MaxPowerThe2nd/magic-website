@@ -1,0 +1,155 @@
+---
+import FlipCard from './effects/FlipCard.astro';
+
+// Numbers are not known yet and must not be invented: [TODO: …] placeholders
+const formats = [
+	{
+		id: 'format-table',
+		suit: '♠',
+		title: 'Tischzauberei',
+		subtitle: 'Close-up / Table Hopping',
+		details: [
+			['Ablauf', 'Ich gehe von Tisch zu Tisch und zeige Zauberkunst direkt in den Händen Ihrer Gäste.'],
+			['Dauer', '[TODO: Dauer]'],
+			['Gästeanzahl', '[TODO: Gästeanzahl]'],
+			['Platzbedarf', 'Keine Bühne nötig, ich komme zu Ihren Gästen.'],
+			['Passender Moment', 'Beim Empfang und als Dinner Magic – ideal zwischen den Gängen.'],
+		],
+	},
+	{
+		id: 'format-salon',
+		suit: '♥',
+		title: 'Salon-Show',
+		subtitle: 'Show für die ganze Gruppe',
+		details: [
+			['Ablauf', 'Eine Show für die ganze Gruppe im Sitzen. Keine Bühne nötig.'],
+			['Dauer', '[TODO: Dauer]'],
+			['Gästeanzahl', '[TODO: Gästeanzahl]'],
+			['Platzbedarf', '[TODO: Platzbedarf]'],
+			['Passender Moment', '[TODO: passender Moment]'],
+		],
+	},
+];
+---
+
+<section class="section section-alt" id="formate">
+	<div class="section-inner">
+		<p class="eyebrow">Formate</p>
+		<h2 class="section-title">Zwei Formate, ein Ziel: Staunen</h2>
+
+		<div class="formats">
+			{
+				formats.map((format) => (
+					<FlipCard id={format.id}>
+						<Fragment slot="front">
+							<span class="index index-top" aria-hidden="true">
+								{format.suit}
+							</span>
+							<span class="index index-bottom" aria-hidden="true">
+								{format.suit}
+							</span>
+							<div class="front-body">
+								<h3 class="card-title">{format.title}</h3>
+								<p class="card-subtitle">{format.subtitle}</p>
+							</div>
+						</Fragment>
+						<Fragment slot="back">
+							<h3 class="back-title">{format.title}</h3>
+							<dl class="details">
+								{format.details.map(([term, text]) => (
+									<div>
+										<dt>{term}</dt>
+										<dd>{text}</dd>
+									</div>
+								))}
+							</dl>
+						</Fragment>
+					</FlipCard>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.formats {
+		display: grid;
+		/* Column never grows beyond the available width because of long back-side text */
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--space-7);
+	}
+
+	@media (min-width: 720px) {
+		.formats {
+			grid-template-columns: repeat(2, minmax(0, 360px));
+			justify-content: center;
+		}
+	}
+
+	/* Corner indices like on a real playing card */
+	.index {
+		position: absolute;
+		font-family: var(--font-display);
+		font-size: var(--text-h3);
+		line-height: 1;
+	}
+
+	.index-top {
+		top: var(--space-4);
+		left: var(--space-4);
+	}
+
+	.index-bottom {
+		right: var(--space-4);
+		bottom: var(--space-4);
+		transform: rotate(180deg);
+	}
+
+	.front-body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
+
+	.card-title {
+		margin: 0 0 var(--space-3);
+		font-size: var(--text-h2);
+		color: inherit;
+	}
+
+	.card-subtitle {
+		margin: 0;
+		font-size: var(--text-xs);
+		font-weight: 500;
+		letter-spacing: var(--tracking-kicker);
+		text-transform: uppercase;
+	}
+
+	.back-title {
+		margin: 0 0 var(--space-4);
+		font-size: var(--text-h3);
+	}
+
+	.details {
+		display: grid;
+		gap: var(--space-3);
+		margin: 0 0 var(--space-4);
+		font-size: var(--text-sm);
+		line-height: 1.5;
+	}
+
+	dt {
+		font-size: var(--text-xs);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	dd {
+		margin: 0;
+		color: var(--color-text-muted);
+	}
+</style>
