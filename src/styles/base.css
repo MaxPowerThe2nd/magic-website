@@ -1,0 +1,151 @@
+/* Base typography, colours and shared utilities. Uses design tokens only. */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	/* Keep section headings clear of the fixed header when jumping to an anchor */
+	scroll-padding-top: var(--header-height);
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-body);
+	font-size: var(--text-base);
+	line-height: var(--leading-body);
+	color: var(--color-text);
+	background: var(--color-bg);
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--font-display);
+	font-weight: 500;
+	line-height: var(--leading-tight);
+	color: var(--color-text);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+a {
+	color: var(--color-accent);
+	text-underline-offset: 0.2em;
+}
+
+a:hover {
+	color: var(--color-accent-hover);
+}
+
+:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 3px;
+}
+
+/* Hidden visually, still read by screen readers */
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* Shared section layout */
+.section {
+	padding: var(--section-space) var(--gutter);
+}
+
+.section-alt {
+	background: var(--color-surface);
+}
+
+.section-inner {
+	max-width: var(--content-width);
+	margin: 0 auto;
+}
+
+/* Kicker above headings */
+.eyebrow {
+	margin: 0 0 var(--space-3);
+	font-family: var(--font-body);
+	font-size: var(--text-xs);
+	font-weight: 500;
+	letter-spacing: var(--tracking-kicker);
+	text-transform: uppercase;
+	color: var(--color-accent);
+}
+
+.section-title {
+	margin: 0 0 var(--space-5);
+	font-size: var(--text-h2);
+}
+
+.section-lead {
+	max-width: 36rem;
+	margin: 0 0 var(--space-7);
+	font-size: var(--text-base);
+	color: var(--color-text-muted);
+}
+
+/* Marks text that still has to be replaced with real content */
+.placeholder-note {
+	display: inline-block;
+	padding: 0.1rem var(--space-2);
+	border: 1px dashed var(--color-border-strong);
+	border-radius: var(--radius-sm);
+	font-size: var(--text-xs);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--color-text-faint);
+}
+
+/* Shared button: filled in the accent colour with dark navy text */
+.button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: var(--tap-target);
+	padding: var(--space-3) var(--space-6);
+	border: 1px solid var(--color-accent);
+	border-radius: var(--radius-sm);
+	font-family: var(--font-body);
+	font-size: var(--text-sm);
+	font-weight: 500;
+	letter-spacing: var(--tracking-button);
+	text-transform: uppercase;
+	color: var(--color-on-accent);
+	background: var(--color-accent);
+	text-decoration: none;
+	cursor: pointer;
+	transition:
+		background-color var(--duration-fast),
+		border-color var(--duration-fast);
+}
+
+.button:hover,
+.button:focus-visible {
+	color: var(--color-on-accent);
+	background: var(--color-accent-hover);
+	border-color: var(--color-accent-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.button {
+		transition: none;
+	}
+}

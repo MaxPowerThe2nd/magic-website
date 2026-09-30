@@ -101,10 +101,10 @@ const formats = ['Close-up-Magie', 'Table Hopping', 'Show im Salonstil'];
 
 	.formats li {
 		padding: 0.35rem 0.9rem;
-		border: 1px solid rgb(214 178 94 / 0.5);
+		border: 1px solid var(--color-border-strong);
 		border-radius: 999px;
-		font-size: var(--text-small);
-		color: var(--color-gold);
+		font-size: var(--text-sm);
+		color: var(--color-accent);
 	}
 
 	.cards {
@@ -137,7 +137,7 @@ const formats = ['Close-up-Magie', 'Table Hopping', 'Show im Salonstil'];
 		display: flex;
 		flex-direction: column;
 		padding: 1.5rem;
-		border: 1px solid rgb(214 178 94 / 0.45);
+		border: 1px solid var(--color-border-strong);
 		border-radius: var(--radius);
 		backface-visibility: hidden;
 		transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -145,14 +145,14 @@ const formats = ['Close-up-Magie', 'Table Hopping', 'Show im Salonstil'];
 
 	.card-front {
 		background:
-			radial-gradient(circle at 85% 15%, rgb(214 178 94 / 0.12), transparent 40%),
+			radial-gradient(circle at 85% 15%, var(--color-border), transparent 40%),
 			var(--color-surface);
 	}
 
 	.card-back {
 		justify-content: center;
-		background: var(--color-cream);
-		color: var(--color-midnight);
+		background: var(--color-text);
+		color: var(--color-bg);
 		transform: rotateY(180deg);
 	}
 
@@ -169,14 +169,14 @@ const formats = ['Close-up-Magie', 'Table Hopping', 'Show im Salonstil'];
 	}
 
 	.card:focus-visible .card-face {
-		outline: 2px solid var(--color-gold);
+		outline: 2px solid var(--color-accent);
 		outline-offset: 3px;
 	}
 
 	.card-suit {
 		font-size: 2rem;
 		line-height: 1;
-		color: var(--color-gold);
+		color: var(--color-accent);
 	}
 
 	.card-title {
@@ -197,14 +197,14 @@ const formats = ['Close-up-Magie', 'Table Hopping', 'Show im Salonstil'];
 		font-family: var(--font-display);
 		font-style: italic;
 		line-height: 1.4;
-		color: rgb(244 236 216 / 0.85);
+		color: var(--color-text-muted);
 	}
 
 	.card-hint {
 		margin-top: auto;
-		font-size: var(--text-small);
+		font-size: var(--text-sm);
 		letter-spacing: 0.08em;
-		color: var(--color-gold);
+		color: var(--color-accent);
 	}
 
 	.card-details {

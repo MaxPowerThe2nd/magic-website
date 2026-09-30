@@ -3,6 +3,8 @@ import { Font } from 'astro:assets';
 import Navbar from '../components/Navbar.astro';
 import Footer from '../components/Footer.astro';
 import MobileBookingBar from '../components/MobileBookingBar.astro';
+import '../styles/tokens.css';
+import '../styles/base.css';
 
 interface Props {
 	title: string;
@@ -24,6 +26,8 @@ const {
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<!-- Lets CSS tell whether JS runs, so every feature stays usable without it -->
+		<script is:inline>document.documentElement.classList.add('js');</script>
 		<Font cssVariable="--font-display" preload />
 		<Font cssVariable="--font-body" preload />
 	</head>
@@ -37,185 +41,3 @@ const {
 	</body>
 </html>
 
-<style is:global>
-	/* Palette "Midnight & Gold" */
-	:root {
-		--color-midnight: #0b1428;
-		--color-surface: #13213f;
-		--color-gold: #d6b25e;
-		--color-cream: #f4ecd8;
-		/* The one playful contrast colour, for buttons and calls to action only */
-		--color-cta: #e8593f;
-		--color-cta-hover: #f07058;
-
-		/* Type scale, mobile first */
-		--text-small: 0.875rem;
-		--text-body: 1.0625rem;
-		--text-lead: 1.1875rem;
-		--text-h3: 1.5rem;
-		--text-h2: 2.125rem;
-		--text-display: 2.75rem;
-
-		--radius: 12px;
-	}
-
-	@media (min-width: 720px) {
-		:root {
-			--text-body: 1.125rem;
-			--text-lead: 1.375rem;
-			--text-h3: 1.75rem;
-			--text-h2: 3rem;
-			--text-display: 4.5rem;
-		}
-	}
-
-	*,
-	*::before,
-	*::after {
-		box-sizing: border-box;
-	}
-
-	body {
-		margin: 0;
-		font-family: var(--font-body);
-		font-size: var(--text-body);
-		line-height: 1.6;
-		color: var(--color-cream);
-		background: var(--color-midnight);
-	}
-
-	h1,
-	h2,
-	h3 {
-		font-family: var(--font-display);
-		font-weight: 600;
-		line-height: 1.1;
-	}
-
-	html {
-		scroll-behavior: smooth;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		html {
-			scroll-behavior: auto;
-		}
-	}
-
-	/* Hidden visually, still read by screen readers */
-	.visually-hidden {
-		position: absolute;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
-		clip-path: inset(50%);
-		white-space: nowrap;
-	}
-
-	img {
-		max-width: 100%;
-		height: auto;
-		display: block;
-	}
-
-	a {
-		color: var(--color-gold);
-	}
-
-	/* Shared section layout */
-	.section {
-		padding: 4.5rem 1.25rem;
-		/* Keep headings clear of the fixed navbar when jumping to a section */
-		scroll-margin-top: 3.5rem;
-	}
-
-	.section-alt {
-		background: var(--color-surface);
-	}
-
-	.section-inner {
-		max-width: 1120px;
-		margin: 0 auto;
-	}
-
-	.eyebrow {
-		margin: 0 0 0.75rem;
-		font-size: 0.8125rem;
-		font-weight: 700;
-		letter-spacing: 0.25em;
-		text-transform: uppercase;
-		color: var(--color-gold);
-	}
-
-	.section-title {
-		margin: 0 0 1.25rem;
-		font-size: var(--text-h2);
-	}
-
-	.section-lead {
-		max-width: 36rem;
-		margin: 0 0 2.5rem;
-		font-size: var(--text-lead);
-		line-height: 1.5;
-		color: rgb(244 236 216 / 0.85);
-	}
-
-	/* Marks text that still has to be replaced with real content */
-	.placeholder-note {
-		display: inline-block;
-		padding: 0.1rem 0.5rem;
-		border: 1px dashed rgb(244 236 216 / 0.4);
-		border-radius: 4px;
-		font-size: 0.75rem;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-		color: rgb(244 236 216 / 0.6);
-	}
-
-	@media (min-width: 720px) {
-		.section {
-			padding: 6.5rem 2.5rem;
-		}
-	}
-
-	/* Shared call-to-action button */
-	.button {
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		min-height: 48px;
-		padding: 0.75rem 1.75rem;
-		border: none;
-		border-radius: 999px;
-		font-family: var(--font-body);
-		font-size: var(--text-body);
-		font-weight: 700;
-		color: var(--color-midnight);
-		background: var(--color-cta);
-		text-decoration: none;
-		cursor: pointer;
-		transition: background-color 0.2s, transform 0.2s;
-	}
-
-	.button:hover,
-	.button:focus-visible {
-		background: var(--color-cta-hover);
-		transform: translateY(-2px);
-	}
-
-	.button:focus-visible {
-		outline: 2px solid var(--color-gold);
-		outline-offset: 3px;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.button {
-			transition: none;
-		}
-
-		.button:hover,
-		.button:focus-visible {
-			transform: none;
-		}
-	}
-</style>

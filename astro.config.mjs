@@ -8,25 +8,29 @@ export default defineConfig({
 		'/gallerie': '/#fotos',
 		'/kontakt': '/#kontakt',
 	},
-	// Fonts are downloaded at build time and served from this site, never from Google
+	// Fonts are downloaded at build time and served from this site as woff2, never from Google
 	fonts: [
 		{
 			provider: fontProviders.fontsource(),
-			name: 'Fraunces',
+			name: 'Cormorant Garamond',
 			cssVariable: '--font-display',
-			weights: ['400 900'],
+			weights: ['400', '500', '600'],
 			styles: ['normal', 'italic'],
 			subsets: ['latin'],
-			fallbacks: ['Georgia', 'serif'],
+			formats: ['woff2'],
+			display: 'swap',
+			fallbacks: ['serif'],
 		},
 		{
 			provider: fontProviders.fontsource(),
-			name: 'DM Sans',
+			name: 'Jost',
 			cssVariable: '--font-body',
-			weights: ['400 700'],
+			weights: ['400 600'],
 			styles: ['normal'],
 			subsets: ['latin'],
-			fallbacks: ['system-ui', 'sans-serif'],
+			formats: ['woff2'],
+			display: 'swap',
+			fallbacks: ['sans-serif'],
 		},
 	],
 });

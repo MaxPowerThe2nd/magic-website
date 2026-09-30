@@ -33,7 +33,9 @@ import profilePic from '../images/home-profilepic.webp';
 	.hero {
 		position: relative;
 		overflow: hidden;
-		background: linear-gradient(to bottom, #020914 60%, var(--color-midnight));
+		/* Room for the fixed, opaque header */
+		padding-top: var(--header-height);
+		background: var(--color-bg);
 	}
 
 	/* Photo fades out at the bottom so the text below sits on a smooth background */
@@ -46,13 +48,13 @@ import profilePic from '../images/home-profilepic.webp';
 	.hero-content {
 		position: relative;
 		margin-top: -5.5rem;
-		padding: 0 1.25rem 4rem;
+		padding: 0 var(--gutter) 4rem;
 	}
 
 	.stage-name {
 		margin: 0 0 0.75rem;
-		font-size: var(--text-display);
-		color: var(--color-gold);
+		font-size: var(--text-h1);
+		color: var(--color-accent);
 	}
 
 	.tagline {
@@ -66,7 +68,7 @@ import profilePic from '../images/home-profilepic.webp';
 	@media (min-width: 720px) {
 		.hero-content {
 			margin-top: -8rem;
-			padding: 0 2.5rem 5rem;
+			padding: 0 var(--gutter) 5rem;
 		}
 	}
 
@@ -76,10 +78,10 @@ import profilePic from '../images/home-profilepic.webp';
 			display: grid;
 			grid-template-columns: 1fr 560px;
 			align-items: center;
-			max-width: 1120px;
+			max-width: var(--content-width);
 			min-height: 100svh;
 			margin: 0 auto;
-			padding: 5rem 2.5rem 3rem;
+			padding: 5rem var(--gutter) 3rem;
 		}
 
 		.hero-photo {

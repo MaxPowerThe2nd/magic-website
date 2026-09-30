@@ -73,7 +73,7 @@ const photos = [
 		margin-top: 0.75rem;
 		font-family: var(--font-display);
 		font-style: italic;
-		color: rgb(244 236 216 / 0.85);
+		color: var(--color-text-muted);
 	}
 
 	.video-frame {
@@ -82,8 +82,8 @@ const photos = [
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
-		border: 1px dashed rgb(214 178 94 / 0.45);
-		background: var(--color-midnight);
+		border: 1px dashed var(--color-border-strong);
+		background: var(--color-bg);
 	}
 
 	.play {
@@ -92,10 +92,10 @@ const photos = [
 		width: 4rem;
 		height: 4rem;
 		padding-left: 0.25rem;
-		border: 2px solid var(--color-gold);
+		border: 2px solid var(--color-accent);
 		border-radius: 50%;
 		font-size: 1.5rem;
-		color: var(--color-gold);
+		color: var(--color-accent);
 	}
 
 	@media (min-width: 720px) {

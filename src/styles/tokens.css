@@ -1,0 +1,77 @@
+/*
+ * Design tokens: the single source for colours, fonts, type scale, spacing, radii and motion.
+ * All other styles reference these custom properties only.
+ *
+ * Font families are provided by Astro's <Font> component (configured in astro.config.mjs):
+ *   --font-display  Cormorant Garamond (name, headings, claim, quotes; never below --text-lead-min)
+ *   --font-body     Jost (navigation, kickers, buttons, body text)
+ */
+
+:root {
+	/* Colours */
+	--color-bg: #0b1426; /* matches the hero photo background exactly */
+	--color-surface: #121e36;
+	--color-accent: #d9d4c7; /* silver / champagne */
+	--color-accent-hover: #ebe7de;
+	--color-on-accent: #0b1426;
+	--color-text: #e9e6df;
+	--color-text-muted: rgb(233 230 223 / 0.75);
+	--color-text-faint: rgb(233 230 223 / 0.58);
+	--color-border: rgb(217 212 199 / 0.18);
+	--color-border-strong: rgb(217 212 199 / 0.4);
+	--color-header-bg: rgb(11 20 38 / 0.92);
+
+	/* Type scale, mobile first */
+	--text-xs: 0.8125rem;
+	--text-sm: 0.9375rem;
+	--text-base: 1.0625rem;
+	--text-lead-min: 1.25rem; /* smallest size allowed for the display font */
+	--text-lead: 1.3125rem;
+	--text-h3: 1.625rem;
+	--text-h2: 2.25rem;
+	--text-h1: 2.5rem;
+
+	--leading-tight: 1.15;
+	--leading-body: 1.65;
+	--tracking-kicker: 0.22em;
+	--tracking-button: 0.12em;
+
+	/* Spacing */
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-5: 1.5rem;
+	--space-6: 2rem;
+	--space-7: 2.5rem;
+	--space-8: 3rem;
+	--gutter: 1rem; /* 16px side gutter on phones */
+	--section-space: 4.5rem;
+	--content-width: 1120px;
+	--header-height: 3.5rem;
+	--tap-target: 48px;
+
+	/* Radii */
+	--radius-sm: 4px;
+	--radius: 12px;
+	--radius-pill: 999px;
+
+	/* Motion */
+	--duration-fast: 0.2s;
+	--duration-base: 0.3s;
+	--duration-slow: 0.6s;
+	--ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+@media (min-width: 720px) {
+	:root {
+		--text-base: 1.125rem;
+		--text-lead: 1.5rem;
+		--text-h3: 1.875rem;
+		--text-h2: 3rem;
+		--text-h1: 3.5rem;
+		--gutter: 2.5rem;
+		--section-space: 6.5rem;
+		--header-height: 4rem;
+	}
+}

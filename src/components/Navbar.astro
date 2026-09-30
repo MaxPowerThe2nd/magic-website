@@ -61,55 +61,54 @@ const links = [
 		document.addEventListener('keydown', (event) => {
 			if (event.key === 'Escape') setOpen(false);
 		});
-
-		// Solid background once the page is scrolled
-		const onScroll = () => navbar.classList.toggle('is-scrolled', window.scrollY > 16);
-		onScroll();
-		window.addEventListener('scroll', onScroll, { passive: true });
 	}
 </script>
 
 <style>
+	/* Always opaque with a light blur, so scrolled content never shows behind logo and nav */
 	.navbar {
 		position: fixed;
 		inset: 0 0 auto;
 		z-index: 10;
-		transition: background-color 0.3s;
-	}
-
-	.navbar.is-scrolled,
-	.navbar.is-open {
-		background: rgb(11 20 40 / 0.95);
-		box-shadow: 0 1px 0 rgb(214 178 94 / 0.25);
+		background: var(--color-header-bg);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border-bottom: 1px solid var(--color-border);
 	}
 
 	.navbar-inner {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		max-width: 1120px;
+		max-width: var(--content-width);
+		min-height: var(--header-height);
 		margin: 0 auto;
-		padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+		/* Right side is smaller because the hamburger button brings its own padding */
+		padding: 0 var(--space-2) 0 var(--gutter);
 	}
 
 	.brand {
 		font-family: var(--font-display);
-		font-size: 1.25rem;
-		font-weight: 600;
-		color: var(--color-gold);
+		font-size: var(--text-lead-min);
+		font-weight: 500;
+		color: var(--color-text);
 		text-decoration: none;
 	}
 
-	/* Hamburger button: 48px tap target */
+	.brand:hover {
+		color: var(--color-accent);
+	}
+
+	/* Hamburger button with a full tap target */
 	.menu-toggle {
-		display: grid;
+		display: none;
 		place-items: center;
-		width: 48px;
-		height: 48px;
+		width: var(--tap-target);
+		height: var(--tap-target);
 		padding: 0;
 		border: none;
 		background: none;
-		color: var(--color-cream);
+		color: var(--color-text);
 		cursor: pointer;
 	}
 
@@ -117,11 +116,12 @@ const links = [
 	.menu-icon::before,
 	.menu-icon::after {
 		display: block;
-		width: 24px;
-		height: 2px;
-		border-radius: 1px;
+		width: 22px;
+		height: 1.5px;
 		background: currentColor;
-		transition: transform 0.25s, opacity 0.25s;
+		transition:
+			transform var(--duration-base),
+			opacity var(--duration-base);
 	}
 
 	.menu-icon {
@@ -156,73 +156,74 @@ const links = [
 		transform: translateY(-7px) rotate(-45deg);
 	}
 
-	/* Mobile: menu drops down below the bar */
-	.menu {
-		display: none;
-		position: absolute;
-		inset: 100% 0 auto;
-		background: rgb(11 20 40 / 0.98);
-		border-bottom: 1px solid rgb(214 178 94 / 0.25);
-	}
-
-	.is-open .menu {
-		display: block;
-	}
-
 	.menu ul {
+		display: flex;
+		flex-wrap: wrap;
 		margin: 0;
-		padding: 0.5rem 0 1rem;
+		padding: 0;
 		list-style: none;
 	}
 
 	.menu a {
 		display: flex;
 		align-items: center;
-		min-height: 52px;
-		padding: 0 1.25rem;
-		font-size: 1.125rem;
-		color: var(--color-cream);
+		min-height: var(--tap-target);
+		padding: 0 var(--space-3);
+		font-size: var(--text-sm);
+		letter-spacing: 0.04em;
+		color: var(--color-text-muted);
 		text-decoration: none;
+		transition: color var(--duration-fast);
 	}
 
 	.menu a:hover,
-	.menu a:focus-visible {
-		color: var(--color-gold);
+	.menu a:focus-visible,
+	.menu a[aria-current] {
+		color: var(--color-accent);
 	}
 
-	/* Large screens: links in one row, no hamburger */
+	/* Mobile with JS: menu collapses behind the hamburger (without JS the links stay visible) */
+	@media (max-width: 959px) {
+		:global(.js) .menu-toggle {
+			display: grid;
+		}
+
+		:global(.js) .menu {
+			display: none;
+			position: absolute;
+			inset: 100% 0 auto;
+			background: var(--color-bg);
+			border-bottom: 1px solid var(--color-border);
+		}
+
+		:global(.js) .is-open .menu {
+			display: block;
+		}
+
+		:global(.js) .menu ul {
+			flex-direction: column;
+			padding: var(--space-2) 0 var(--space-4);
+		}
+
+		:global(.js) .menu a {
+			padding: 0 var(--gutter);
+			font-size: var(--text-base);
+		}
+
+		/* Without JS the header scrolls away instead of covering the wrapped links */
+		:global(html:not(.js)) .navbar {
+			position: static;
+		}
+	}
+
 	@media (min-width: 960px) {
 		.navbar-inner {
-			padding: 0.75rem 2.5rem;
-		}
-
-		.menu-toggle {
-			display: none;
-		}
-
-		.menu {
-			display: block;
-			position: static;
-			background: none;
-			border: none;
-		}
-
-		.menu ul {
-			display: flex;
-			gap: 0.25rem;
-			padding: 0;
-		}
-
-		.menu a {
-			min-height: 44px;
-			padding: 0 0.75rem;
-			font-size: var(--text-small);
-			letter-spacing: 0.06em;
+			padding: 0 var(--gutter);
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.navbar,
+		.menu a,
 		.menu-icon,
 		.menu-icon::before,
 		.menu-icon::after {
