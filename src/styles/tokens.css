@@ -57,6 +57,9 @@
 	/* Hero h1: scales with the viewport so "Moderne Zauberkunst" always fits on one line */
 	--text-display: min(2.75rem, 9.4vw);
 	--text-points: 1.25rem; /* hero bullet lines, never below 19px */
+	/* Interlude sentence between style and formats */
+	--text-interlude-small: clamp(0.8125rem, 1.2vw, 1.0625rem);
+	--text-interlude: clamp(1.75rem, 3.2vw, 2.5rem);
 
 	--leading-tight: 1.15;
 	--lh-display: 1.05; /* large headings incl. hero h1 */
@@ -68,6 +71,7 @@
 	--tracking-kicker: 0.15em;
 	--tracking-button: 0.12em;
 	--tracking-logo: 0.3em;
+	--tracking-interlude: 0.12em;
 
 	/* Spacing */
 	--space-1: 0.25rem;
@@ -107,6 +111,7 @@
 		--text-h1: 3.5rem;
 		--text-display: clamp(2.75rem, 4.6vw, 4rem);
 		--text-points: 1.5rem;
+		--tracking-interlude: 0.2em;
 		--section-space: 6.5rem;
 		--header-height: 4.5rem;
 	}

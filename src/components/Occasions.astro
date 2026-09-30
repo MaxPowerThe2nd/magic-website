@@ -1,0 +1,81 @@
+---
+// Quiet interlude between the style section and the formats: one sentence on two levels.
+// A single <p>, so screen readers read it as one sentence. Keeps the former "shows" anchor.
+---
+
+<section class="section occasions" id="shows" aria-label="Anlässe">
+	<div class="section-inner">
+		<p class="occasions-text">
+			<span class="occasions-list">
+				Firmenevents<span class="visually-hidden">,</span><span class="dot" aria-hidden="true"> · </span>Privatfeiern<span
+					class="visually-hidden">,</span
+				><span class="dot" aria-hidden="true"> · </span>Hochzeiten
+			</span>{' '}<span class="occasions-punch">
+				<span class="punch-part">… oder Scheidungen.</span>{' '}<span class="punch-part"
+					>Ein wenig Magie schadet nie.</span
+				>
+			</span>
+		</p>
+	</div>
+</section>
+
+<style>
+	.occasions-text {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-3);
+		margin: 0;
+		text-align: center;
+	}
+
+	/* Upper level: small caps line in the accent colour; may wrap on narrow phones */
+	.occasions-list {
+		text-wrap: balance;
+		font-family: var(--font-body);
+		font-size: var(--text-interlude-small);
+		font-weight: 500;
+		letter-spacing: var(--tracking-interlude);
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	.dot {
+		white-space: pre;
+	}
+
+	/* Lower level: the punchline */
+	.occasions-punch {
+		font-family: var(--font-display);
+		font-size: var(--text-interlude);
+		font-weight: var(--weight-display-light);
+		line-height: var(--leading-tight);
+		color: var(--color-text);
+	}
+
+	/* Phones: line break after "Scheidungen." */
+	.punch-part {
+		display: block;
+	}
+
+	@media (min-width: 720px) {
+		.punch-part {
+			display: inline;
+		}
+
+		.occasions-list {
+			display: flex;
+			align-items: center;
+			gap: var(--space-4);
+		}
+
+		/* Fine hairlines left and right of the upper line */
+		.occasions-list::before,
+		.occasions-list::after {
+			content: '';
+			width: 60px;
+			height: 1px;
+			background: var(--color-border-strong);
+		}
+	}
+</style>
