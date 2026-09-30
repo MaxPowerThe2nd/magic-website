@@ -1,0 +1,10 @@
+// Cloudflare Workers configuration: static assets only, no server code.
+// Build with `npx astro build`, test locally with `npx wrangler dev`, publish with `npx wrangler deploy`.
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "magic-website",
+	"compatibility_date": "2026-09-30",
+	"assets": {
+		"directory": "./dist"
+	}
+}

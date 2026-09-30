@@ -30,6 +30,14 @@ After each approved step, commit the changes with a short, clear English commit 
 # Images
 Web images live in /src/images inside the project, so Astro can optimize them. Original photos are never stored in the project; they stay outside the repository. Every image added to /src/images is resized and compressed to a web-ready size first; Astro then generates the smaller variants for mobile and modern formats (mobile first, responsive images via srcset and sizes). File names are lowercase English words separated by hyphens, no spaces or special characters.
 
+# Hosting
+The site is hosted on Cloudflare Workers as static assets only (no adapter, no server functions).
+- Config: wrangler.jsonc (name "magic-website", assets.directory "./dist"); wrangler is a devDependency.
+- Build: npx astro build (output in ./dist).
+- Local test of the built site: npx wrangler dev (http://localhost:8787).
+- Deploy: npx wrangler login once, then npx wrangler deploy.
+- Domain: set `site` in astro.config.mjs once the domain is registered (currently [TODO: Domain]) and connect the domain to the Worker in the Cloudflare dashboard.
+
 ## Development
 
 When starting the dev server, use background mode:

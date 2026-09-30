@@ -3,6 +3,9 @@ import { defineConfig, fontProviders } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
+	// TODO: [TODO: Domain] – enable once the domain is registered. Astro requires a valid URL here,
+	// so the option stays commented out until then, e.g. site: 'https://www.example.at',
+	// site: '[TODO: Domain]',
 	// Former subpages now live as sections on the one-pager
 	redirects: {
 		'/gallerie': '/#fotos',
