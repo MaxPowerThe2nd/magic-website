@@ -41,7 +41,7 @@ import { contact, phoneHref, emailHref } from '../data/contact';
 	.cloche {
 		--label-space: 4.5rem;
 		/* Room above the tray for the card once it has risen */
-		padding-top: var(--space-6);
+		padding-top: calc(var(--space-8) * 1.75);
 	}
 
 	.cloche-stage {
@@ -109,16 +109,15 @@ import { contact, phoneHref, emailHref } from '../data/contact';
 		font-size: var(--text-sm);
 	}
 
+	/* Label above the value, so the e-mail address fits on one line even on narrow phones */
 	.card-lines li {
 		display: flex;
-		gap: var(--space-2);
-		align-items: baseline;
-		min-height: 1.75rem;
+		flex-direction: column;
+		margin-bottom: var(--space-2);
 	}
 
 	.card-label {
-		min-width: 4.5rem;
-		font-size: var(--text-xs);
+		font-size: 0.6875rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
 	}
