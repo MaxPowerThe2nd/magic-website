@@ -1,8 +1,9 @@
 ---
-import { Picture } from 'astro:assets';
+import ImageSlot from './ImageSlot.astro';
 import cardsStageChild from '../images/cards-stage-child.webp';
 import ropeMagicStage from '../images/rope-magic-stage.webp';
 
+// Photos from src/images; add more entries here to fill the gallery
 const photos = [
 	{
 		src: cardsStageChild,
@@ -25,28 +26,15 @@ const photos = [
 		<div class="gallery">
 			{
 				photos.map(({ src, alt, caption }) => (
-					<figure class="tile">
-						<Picture
-							src={src}
-							alt={alt}
-							formats={['avif', 'webp']}
-							fallbackFormat="webp"
-							widths={[400, 800, 1200]}
-							sizes="(min-width: 960px) 360px, (min-width: 720px) 50vw, 100vw"
-						/>
-						<figcaption>{caption}</figcaption>
-					</figure>
+					<ImageSlot
+						class="tile"
+						image={src}
+						alt={alt}
+						caption={caption}
+						sizes="(min-width: 960px) 360px, (min-width: 720px) 50vw, 100vw"
+					/>
 				))
 			}
-
-			<!-- Placeholder until a showreel video exists -->
-			<figure class="tile video-placeholder">
-				<div class="video-frame">
-					<span class="play" aria-hidden="true">▶</span>
-					<span class="placeholder-note">Video folgt</span>
-				</div>
-				<figcaption>Showreel – demnächst hier.</figcaption>
-			</figure>
 		</div>
 	</div>
 </section>
@@ -54,48 +42,12 @@ const photos = [
 <style>
 	.gallery {
 		display: grid;
-		gap: 1.5rem;
+		gap: var(--space-5);
 	}
 
-	.tile {
-		margin: 0;
-	}
-
-	.tile :global(img),
-	.video-frame {
-		width: 100%;
+	.gallery :global(.tile img) {
 		aspect-ratio: 4 / 5;
 		object-fit: cover;
-		border-radius: var(--radius);
-	}
-
-	figcaption {
-		margin-top: 0.75rem;
-		font-family: var(--font-display);
-		font-style: italic;
-		color: var(--color-text-muted);
-	}
-
-	.video-frame {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 1rem;
-		border: 1px dashed var(--color-border-strong);
-		background: var(--color-bg);
-	}
-
-	.play {
-		display: grid;
-		place-items: center;
-		width: 4rem;
-		height: 4rem;
-		padding-left: 0.25rem;
-		border: 2px solid var(--color-accent);
-		border-radius: 50%;
-		font-size: 1.5rem;
-		color: var(--color-accent);
 	}
 
 	@media (min-width: 720px) {

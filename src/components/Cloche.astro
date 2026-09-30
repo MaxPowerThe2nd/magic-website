@@ -1,0 +1,262 @@
+---
+// Effect module "cloche": silver tray, contact card and cloche stacked on top of each other.
+// Behaviour lives in src/scripts/effects/cloche.ts. Without JS or with reduced motion
+// the card simply lies open on the tray and the cloche is not shown.
+import traySvg from '../assets/cloche/tray-silber.svg?raw';
+import clocheSvg from '../assets/cloche/cloche-silber.svg?raw';
+import { contact, phoneHref, emailHref } from '../data/contact';
+---
+
+<div class="cloche" data-effect="cloche">
+	<div class="cloche-stage">
+		<div class="cloche-tray" set:html={traySvg} />
+
+		<div class="cloche-card" id="contact-card" tabindex="-1" data-cloche-card>
+			<p class="card-name">{contact.name}</p>
+			<p class="card-role">Zauberkünstler &amp; Entertainer</p>
+			<ul class="card-lines">
+				<li><span class="card-label">Telefon</span> <a href={phoneHref}>{contact.phoneDisplay}</a></li>
+				<li><span class="card-label">E-Mail</span> <a href={emailHref}>{contact.email}</a></li>
+			</ul>
+			<a class="card-button" href="#anfrage">Show anfragen</a>
+		</div>
+
+		<button
+			class="cloche-lid"
+			type="button"
+			aria-expanded="false"
+			aria-controls="contact-card"
+			data-cloche-lid
+		>
+			<span class="cloche-graphic" set:html={clocheSvg} />
+			<span class="cloche-label">
+				<span class="cloche-question">Ist das Ihre Karte?</span>
+				<span class="cloche-hint">Kontaktdaten anzeigen</span>
+			</span>
+		</button>
+	</div>
+</div>
+
+<style>
+	.cloche {
+		--label-space: 4.5rem;
+		/* Room above the tray for the card once it has risen */
+		padding-top: var(--space-6);
+	}
+
+	.cloche-stage {
+		position: relative;
+		max-width: 420px;
+		margin: 0 auto;
+		aspect-ratio: 400 / 260;
+	}
+
+	.cloche-tray,
+	.cloche-graphic {
+		position: absolute;
+		inset: 0;
+	}
+
+	.cloche-tray :global(svg),
+	.cloche-graphic :global(svg) {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	/* Contact card: default state is open (no JS, reduced motion) */
+	.cloche-card {
+		position: absolute;
+		left: 50%;
+		/* Bottom edge sits in the well of the tray */
+		bottom: 14%;
+		width: min(300px, 86%);
+		padding: var(--space-4) var(--space-5);
+		border-radius: var(--radius-sm);
+		background: var(--color-text);
+		color: var(--color-on-accent);
+		box-shadow: 0 10px 30px rgb(0 0 0 / 0.45);
+		transform: translateX(-50%);
+		transform-origin: 50% 100%;
+		transition: transform var(--duration-slow) var(--ease-out);
+	}
+
+	.cloche-card:focus {
+		outline: none;
+	}
+
+	.card-name {
+		margin: 0;
+		font-family: var(--font-display);
+		font-size: var(--text-h3);
+		font-weight: var(--weight-display);
+		line-height: var(--leading-tight);
+	}
+
+	.card-role {
+		margin: 0 0 var(--space-2);
+		font-size: var(--text-xs);
+		letter-spacing: 0.08em;
+		white-space: nowrap;
+		text-transform: uppercase;
+	}
+
+	.card-lines {
+		margin: 0 0 var(--space-3);
+		padding: var(--space-2) 0 0;
+		border-top: 1px solid currentColor;
+		list-style: none;
+		font-size: var(--text-sm);
+	}
+
+	.card-lines li {
+		display: flex;
+		gap: var(--space-2);
+		align-items: baseline;
+		min-height: 1.75rem;
+	}
+
+	.card-label {
+		min-width: 4.5rem;
+		font-size: var(--text-xs);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.card-lines a {
+		color: inherit;
+		word-break: break-word;
+	}
+
+	.card-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: var(--tap-target);
+		border-radius: var(--radius-sm);
+		font-size: var(--text-sm);
+		font-weight: 500;
+		letter-spacing: var(--tracking-button);
+		text-transform: uppercase;
+		text-decoration: none;
+		color: var(--color-text);
+		background: var(--color-bg);
+	}
+
+	.card-button:hover,
+	.card-button:focus-visible {
+		color: var(--color-accent-hover);
+	}
+
+	.cloche-card a:focus-visible {
+		outline-color: var(--color-bg);
+	}
+
+	/* Cloche button: not shown until the module is ready */
+	.cloche-lid {
+		display: none;
+	}
+
+	/* ---- Closed state, only with JS and when motion is allowed ---- */
+	@media (prefers-reduced-motion: no-preference) {
+		.cloche.is-ready .cloche-stage {
+			margin-bottom: var(--label-space);
+		}
+
+		.cloche.is-ready:not(.is-open) .cloche-card {
+			transform: translateX(-50%) scale(0.3);
+		}
+
+		.cloche.is-ready .cloche-lid {
+			position: absolute;
+			inset: 0 0 calc(var(--label-space) * -1);
+			display: block;
+			padding: 0;
+			border: none;
+			background: none;
+			color: var(--color-text);
+			font: inherit;
+			cursor: pointer;
+			transition: visibility 0s linear var(--duration-slow);
+		}
+
+		.cloche-graphic {
+			bottom: var(--label-space);
+			/* Centre of the cloche rim */
+			transform-origin: 50% 83%;
+			transition:
+				transform 0.8s var(--ease-out),
+				opacity 0.8s var(--ease-out);
+		}
+
+		.cloche-label {
+			position: absolute;
+			inset: auto 0 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: var(--space-1);
+			transition: opacity var(--duration-base);
+		}
+
+		.cloche-question {
+			font-family: var(--font-display);
+			font-size: var(--text-lead);
+			font-style: italic;
+			font-weight: var(--weight-display-light);
+			color: var(--color-accent);
+		}
+
+		.cloche-hint {
+			font-size: var(--text-xs);
+			letter-spacing: var(--tracking-kicker);
+			text-transform: uppercase;
+			color: var(--color-text-muted);
+		}
+
+		.cloche-lid:hover .cloche-question,
+		.cloche-lid:focus-visible .cloche-question {
+			color: var(--color-accent-hover);
+		}
+
+		/* Tray shadow of the cloche fades out together with the cloche */
+		.cloche-tray :global(#cloche-shadow) {
+			transition: opacity 0.8s var(--ease-out);
+		}
+
+		/* One-time hint: the cloche lifts a crack so a card corner shows */
+		.cloche.is-peek .cloche-graphic {
+			animation: cloche-peek 1.6s var(--ease-out);
+		}
+
+		/* Open: cloche lifts up and away, card rises out of the tray */
+		.cloche.is-open .cloche-graphic {
+			transform: translateY(-120%) rotate(-12deg);
+			opacity: 0;
+		}
+
+		.cloche.is-open .cloche-label {
+			opacity: 0;
+		}
+
+		.cloche.is-open .cloche-lid {
+			visibility: hidden;
+		}
+
+		.cloche.is-open .cloche-tray :global(#cloche-shadow) {
+			opacity: 0;
+		}
+	}
+
+	@keyframes cloche-peek {
+		0%,
+		100% {
+			transform: none;
+		}
+
+		35%,
+		65% {
+			transform: translateY(-10%) rotate(-5deg);
+		}
+	}
+</style>

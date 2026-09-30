@@ -1,23 +1,28 @@
 ---
+import { contact, phoneHref, emailHref } from '../data/contact';
+
 const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
 	<div class="footer-inner">
-		<p class="footer-name">Reinhard Hütter</p>
-		<p class="footer-tagline">Magie auf dem silbernen Tablett</p>
+		<p class="footer-name">{contact.name}</p>
+		<ul class="footer-contact">
+			<li><a href={phoneHref}>{contact.phoneDisplay}</a></li>
+			<li><a href={emailHref}>{contact.email}</a></li>
+		</ul>
 		<nav aria-label="Rechtliches">
 			<a href="/impressum">Impressum</a>
 			<a href="/datenschutz">Datenschutz</a>
 		</nav>
-		<p class="copyright">© {year} Reinhard Hütter</p>
+		<p class="copyright">© {year} {contact.name}</p>
 	</div>
 </footer>
 
 <style>
 	.footer {
 		/* Extra space at the bottom so the mobile booking bar never covers content */
-		padding: 3rem var(--gutter) 6.5rem;
+		padding: var(--space-8) var(--gutter) calc(var(--space-8) * 2.25);
 		border-top: 1px solid var(--color-border);
 		text-align: center;
 	}
@@ -28,44 +33,55 @@ const year = new Date().getFullYear();
 	}
 
 	.footer-name {
-		margin: 0;
+		margin: 0 0 var(--space-3);
 		font-family: var(--font-display);
-		font-size: 1.5rem;
-		font-weight: 600;
-		color: var(--color-accent);
+		font-size: var(--text-h3);
+		font-weight: var(--weight-display);
 	}
 
-	.footer-tagline {
-		margin: 0.25rem 0 1.5rem;
-		font-family: var(--font-display);
-		font-style: italic;
-		color: var(--color-text-muted);
+	.footer-contact {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0 var(--space-5);
+		margin: 0 0 var(--space-4);
+		padding: 0;
+		list-style: none;
+	}
+
+	.footer-contact a,
+	nav a {
+		display: inline-flex;
+		align-items: center;
+		min-height: var(--tap-target);
+		padding: 0 var(--space-2);
 	}
 
 	nav {
 		display: flex;
 		justify-content: center;
-		gap: 1rem;
+		gap: var(--space-4);
 	}
 
 	nav a {
-		display: inline-flex;
-		align-items: center;
-		min-height: 44px;
-		padding: 0 0.5rem;
 		font-size: var(--text-sm);
-		color: var(--color-text);
+		color: var(--color-text-muted);
+	}
+
+	nav a:hover,
+	nav a:focus-visible {
+		color: var(--color-accent);
 	}
 
 	.copyright {
-		margin: 1rem 0 0;
+		margin: var(--space-4) 0 0;
 		font-size: var(--text-sm);
 		color: var(--color-text-faint);
 	}
 
 	@media (min-width: 960px) {
 		.footer {
-			padding-bottom: 3rem;
+			padding-bottom: var(--space-8);
 		}
 	}
 </style>

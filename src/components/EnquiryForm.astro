@@ -1,0 +1,167 @@
+---
+// Structured enquiry form; behaviour in src/scripts/effects/enquiry-form.ts
+import { emailHref } from '../data/contact';
+
+const occasions = ['Firmenevent', 'Hochzeit', 'Privatfeier', 'Restaurant', 'Scheidung', 'Sonstiges'];
+const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch offen, bitte beraten'];
+---
+
+<div class="enquiry" id="anfrage">
+	<form
+		class="form"
+		action={emailHref}
+		method="post"
+		enctype="text/plain"
+		data-effect="enquiry-form"
+		data-confirmation="enquiry-confirmation"
+	>
+		<div class="field">
+			<label for="enquiry-date">Datum</label>
+			<input id="enquiry-date" name="datum" type="date" />
+		</div>
+
+		<div class="field">
+			<label for="enquiry-place">Ort</label>
+			<input id="enquiry-place" name="ort" type="text" autocomplete="address-level2" />
+		</div>
+
+		<div class="field">
+			<label for="enquiry-occasion">Anlass</label>
+			<select id="enquiry-occasion" name="anlass">
+				<option value="">Bitte wählen</option>
+				{occasions.map((occasion) => <option>{occasion}</option>)}
+			</select>
+		</div>
+
+		<div class="field">
+			<label for="enquiry-guests">Gästeanzahl</label>
+			<input id="enquiry-guests" name="gaeste" type="number" min="1" inputmode="numeric" />
+		</div>
+
+		<div class="field field-wide">
+			<label for="enquiry-format">Gewünschtes Format</label>
+			<select id="enquiry-format" name="format">
+				<option value="">Bitte wählen</option>
+				{formats.map((format) => <option>{format}</option>)}
+			</select>
+		</div>
+
+		<div class="field field-wide">
+			<label for="enquiry-message">Nachricht</label>
+			<textarea id="enquiry-message" name="nachricht" rows="4"></textarea>
+		</div>
+
+		<div class="field">
+			<label for="enquiry-name">Name <span aria-hidden="true">*</span></label>
+			<input id="enquiry-name" name="name" type="text" autocomplete="name" required />
+		</div>
+
+		<div class="field">
+			<label for="enquiry-email">E-Mail <span aria-hidden="true">*</span></label>
+			<input id="enquiry-email" name="email" type="email" autocomplete="email" required />
+		</div>
+
+		<div class="field">
+			<label for="enquiry-phone">Telefon</label>
+			<input id="enquiry-phone" name="telefon" type="tel" autocomplete="tel" />
+		</div>
+
+		<div class="field field-wide form-footer">
+			<p class="required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
+			<button class="button" type="submit">Anfrage senden</button>
+		</div>
+	</form>
+
+	<p class="confirmation" id="enquiry-confirmation" role="status" tabindex="-1" hidden>
+		Ihre Anfrage ist angerichtet. Die Antwort kommt innerhalb von [TODO: Zeitraum].
+	</p>
+</div>
+
+<style>
+	.enquiry {
+		scroll-margin-top: var(--header-height);
+	}
+
+	.form {
+		display: grid;
+		gap: var(--space-4);
+	}
+
+	.field {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	label {
+		font-size: var(--text-xs);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-text-muted);
+	}
+
+	input,
+	select,
+	textarea {
+		width: 100%;
+		min-height: var(--tap-target);
+		padding: var(--space-2) var(--space-3);
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius-sm);
+		font: inherit;
+		font-size: var(--text-base);
+		color: var(--color-text);
+		background: var(--color-bg);
+		color-scheme: dark;
+	}
+
+	textarea {
+		resize: vertical;
+	}
+
+	input:focus-visible,
+	select:focus-visible,
+	textarea:focus-visible {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 1px;
+		border-color: var(--color-accent);
+	}
+
+	.form-footer {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-4);
+		margin-top: var(--space-2);
+	}
+
+	.required-note {
+		margin: 0;
+		font-size: var(--text-xs);
+		color: var(--color-text-faint);
+	}
+
+	.confirmation {
+		margin: 0;
+		padding: var(--space-6);
+		border: 1px solid var(--color-border-strong);
+		border-radius: var(--radius);
+		font-family: var(--font-display);
+		font-size: var(--text-lead);
+		font-style: italic;
+		color: var(--color-accent);
+	}
+
+	/* Two columns on large screens */
+	@media (min-width: 720px) {
+		.form {
+			grid-template-columns: 1fr 1fr;
+			column-gap: var(--space-5);
+		}
+
+		.field-wide {
+			grid-column: 1 / -1;
+		}
+	}
+</style>

@@ -1,72 +1,35 @@
 ---
-// Placeholder contact details: replace before going live (example.com is a reserved dummy domain)
-const email = 'kontakt@example.com';
-const phoneDisplay = '+43 000 000 00 00';
-const phoneLink = '+430000000000';
+import Cloche from './Cloche.astro';
+import EnquiryForm from './EnquiryForm.astro';
 ---
 
 <section class="section section-alt" id="kontakt">
-	<div class="section-inner contact">
+	<div class="section-inner">
 		<p class="eyebrow">Kontakt</p>
 		<h2 class="section-title">Bereit für ein kleines Wunder?</h2>
 		<p class="section-lead">
-			Erzählen Sie mir kurz von Ihrem Anlass: Datum, Ort und ungefähre Gästezahl. Sie bekommen
-			schnell eine Antwort – versprochen, ganz ohne Zaubertrick.
+			Erzählen Sie mir von Ihrem Anlass. Je mehr ich weiß, desto passender wird das Programm.
 		</p>
 
-		<div class="actions">
-			<a class="button" href={`mailto:${email}?subject=Anfrage%20Show`}>Magie anfragen</a>
-			<a class="phone" href={`tel:${phoneLink}`}>{phoneDisplay}</a>
+		<div class="contact-grid">
+			<Cloche />
+			<EnquiryForm />
 		</div>
-
-		<p class="details">
-			<a href={`mailto:${email}`}>{email}</a>
-			<span class="placeholder-note">Kontaktdaten folgen</span>
-		</p>
 	</div>
 </section>
 
 <style>
-	.contact {
-		max-width: 44rem;
-		text-align: center;
+	.contact-grid {
+		display: grid;
+		gap: var(--space-8);
 	}
 
-	.contact .section-lead {
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	.actions {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1.25rem;
-	}
-
-	.phone {
-		display: inline-flex;
-		align-items: center;
-		min-height: 48px;
-		font-family: var(--font-display);
-		font-size: 1.375rem;
-		text-decoration: none;
-	}
-
-	.details {
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		justify-content: center;
-		gap: 0.75rem;
-		margin: 2rem 0 0;
-	}
-
-	@media (min-width: 720px) {
-		.actions {
-			flex-direction: row;
-			justify-content: center;
-			gap: 2rem;
+	/* Cloche left, form right on large screens */
+	@media (min-width: 960px) {
+		.contact-grid {
+			grid-template-columns: 5fr 7fr;
+			align-items: start;
+			gap: var(--space-8);
 		}
 	}
 </style>

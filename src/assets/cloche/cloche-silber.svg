@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" role="presentation" aria-hidden="true">
+  <defs>
+    <linearGradient id="cl-chrome" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6E7786"/>
+      <stop offset=".14" stop-color="#D9DEE5"/>
+      <stop offset=".22" stop-color="#FFFFFF"/>
+      <stop offset=".32" stop-color="#C2C8D1"/>
+      <stop offset=".48" stop-color="#8A93A1"/>
+      <stop offset=".62" stop-color="#26344F"/>
+      <stop offset=".74" stop-color="#4E5C75"/>
+      <stop offset=".88" stop-color="#C7CDD6"/>
+      <stop offset=".95" stop-color="#E8EBEF"/>
+      <stop offset="1" stop-color="#7A8391"/>
+    </linearGradient>
+    <linearGradient id="cl-shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".22"/>
+      <stop offset=".45" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".30"/>
+    </linearGradient>
+    <radialGradient id="cl-sheen" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#fff" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="cl-knob" cx="36%" cy="32%" r="75%">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset=".35" stop-color="#C9CFD8"/>
+      <stop offset=".7" stop-color="#3A4861"/>
+      <stop offset="1" stop-color="#8C95A3"/>
+    </radialGradient>
+    <clipPath id="cl-clip"><path d="M84 214 C 84 140, 136 86, 200 86 C 264 86, 316 140, 316 214 A116 14 0 0 1 84 214 Z"/></clipPath>
+  </defs>
+  <path d="M84 214 C 84 140, 136 86, 200 86 C 264 86, 316 140, 316 214 A116 14 0 0 1 84 214 Z" fill="url(#cl-chrome)"/>
+  <path d="M84 214 C 84 140, 136 86, 200 86 C 264 86, 316 140, 316 214 A116 14 0 0 1 84 214 Z" fill="url(#cl-shade)"/>
+  <g clip-path="url(#cl-clip)">
+    <ellipse cx="148" cy="138" rx="34" ry="62" transform="rotate(28 148 138)" fill="url(#cl-sheen)"/>
+    <path d="M113 192 C 111 152, 132 118, 170 100 C 138 121, 121 153, 119 193 Z" fill="#FFFFFF" fill-opacity=".9"/>
+    <path d="M303 196 C 302 160, 284 128, 258 110 C 287 131, 308 163, 309 198 Z" fill="#FFFFFF" fill-opacity=".35"/>
+  </g>
+  <path d="M82 214 A118 14 0 0 0 318 214 L318 220 A118 14 0 0 1 82 220 Z" fill="url(#cl-chrome)"/>
+  <path d="M82 220 A118 14 0 0 0 318 220" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="1"/>
+  <path d="M82 214 A118 14 0 0 0 318 214" fill="none" stroke="#FFFFFF" stroke-opacity=".7" stroke-width=".9"/>
+  <rect x="195" y="76" width="10" height="11" rx="2" fill="url(#cl-chrome)"/>
+  <ellipse cx="200" cy="87" rx="17" ry="3.6" fill="url(#cl-chrome)"/>
+  <ellipse cx="200" cy="67" rx="11.5" ry="10.5" fill="url(#cl-knob)"/>
+</svg>

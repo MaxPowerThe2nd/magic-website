@@ -1,3 +1,12 @@
+---
+import type { ImageMetadata } from 'astro';
+import ImageSlot from './ImageSlot.astro';
+
+// Optional photo: import a file from src/images and assign it here, e.g.
+// import photo from '../images/audience-laughing.webp'; const aboutImage = photo;
+const aboutImage: ImageMetadata | undefined = undefined;
+---
+
 <section class="section section-alt" id="ueber-mich">
 	<div class="section-inner about">
 		<div>
@@ -21,6 +30,8 @@
 			</p>
 			<p class="signature">Reinhard Hütter</p>
 		</div>
+
+		<ImageSlot class="about-image" image={aboutImage} alt="Reinhard Hütter" sizes="(min-width: 960px) 440px, 100vw" />
 	</div>
 </section>
 

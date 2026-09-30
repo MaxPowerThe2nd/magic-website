@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" role="presentation" aria-hidden="true">
+  <defs>
+    <radialGradient id="tr-shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#000" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tr-chrome" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6E7786"/>
+      <stop offset=".14" stop-color="#D9DEE5"/>
+      <stop offset=".22" stop-color="#FFFFFF"/>
+      <stop offset=".32" stop-color="#C2C8D1"/>
+      <stop offset=".48" stop-color="#8A93A1"/>
+      <stop offset=".62" stop-color="#26344F"/>
+      <stop offset=".74" stop-color="#4E5C75"/>
+      <stop offset=".88" stop-color="#C7CDD6"/>
+      <stop offset=".95" stop-color="#E8EBEF"/>
+      <stop offset="1" stop-color="#7A8391"/>
+    </linearGradient>
+    <linearGradient id="tr-side" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3E4A5E"/>
+      <stop offset=".25" stop-color="#9AA3B0"/>
+      <stop offset=".5" stop-color="#5A6679"/>
+      <stop offset=".8" stop-color="#A9B1BC"/>
+      <stop offset="1" stop-color="#3A4558"/>
+    </linearGradient>
+    <linearGradient id="tr-well" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#172340"/>
+      <stop offset=".45" stop-color="#4B576C"/>
+      <stop offset=".8" stop-color="#AEB5C0"/>
+      <stop offset="1" stop-color="#DDE1E7"/>
+    </linearGradient>
+    <linearGradient id="tr-shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".18"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity=".25"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="200" cy="244" rx="192" ry="20" fill="url(#tr-shadow)"/>
+  <path d="M28 228 A172 21 0 0 0 372 228 L370 234 A170 21 0 0 1 30 234 Z" fill="url(#tr-side)"/>
+  <ellipse cx="200" cy="228" rx="172" ry="21" fill="url(#tr-chrome)"/>
+  <ellipse cx="200" cy="228" rx="172" ry="21" fill="url(#tr-shade)"/>
+  <ellipse cx="200" cy="227" rx="164" ry="18.5" fill="none" stroke="#FFFFFF" stroke-opacity=".28" stroke-width=".8"/>
+  <ellipse cx="200" cy="227" rx="154" ry="15.5" fill="url(#tr-well)"/>
+  <path d="M46 227 A154 15.5 0 0 1 354 227" fill="none" stroke="#0B1426" stroke-opacity=".6" stroke-width="1.2"/>
+  <g id="cloche-shadow">
+    <ellipse cx="200" cy="222" rx="128" ry="15" fill="url(#tr-shadow)"/>
+  </g>
+</svg>
