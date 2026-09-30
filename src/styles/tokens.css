@@ -36,6 +36,12 @@
 	--color-card-back: #e9e6df; /* card backs, used with reduced opacity */
 	--color-shine: #ffffff;
 
+	/* Burning card: fire glow and embers */
+	--color-fire-core: rgb(255 120 40 / 0.34);
+	--color-fire-edge: rgb(255 90 30 / 0.12);
+	--color-ember: #ffc266;
+	--color-ember-glow: rgb(255 120 40 / 0.75);
+
 	/* Type scale, mobile first */
 	--text-xs: 0.8125rem;
 	--text-sm: 0.9375rem;
