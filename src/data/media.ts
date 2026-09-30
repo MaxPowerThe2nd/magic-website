@@ -4,6 +4,7 @@
 //   Own MP4:     { type: 'mp4', src: '/videos/showreel.mp4' }  (file in /public/videos)
 export type Video = { type: 'youtube'; id: string } | { type: 'mp4'; src: string };
 
+// TODO: enter the showreel here once it exists, e.g. { type: 'youtube', id: '...' } or { type: 'mp4', src: '/videos/showreel.mp4' }
 export const showreel: Video | undefined = undefined;
 
 /** Plain link used without JavaScript */

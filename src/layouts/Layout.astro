@@ -13,7 +13,7 @@ interface Props {
 
 const {
 	title,
-	description = 'Reinhard Hütter – Zauberkünstler und Entertainer für Firmenevents, Hochzeiten, Privatfeiern und Restaurants.',
+	description = 'Moderne Zauberkunst mit Humor für Firmenevents, Hochzeiten und private Feiern. Tischzauberei und Salon-Show – über 10 Jahre Erfahrung.',
 } = Astro.props;
 ---
 
@@ -26,6 +26,11 @@ const {
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 		<meta name="description" content={description} />
+		<!-- Open Graph: preview when the page is shared -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Reinhard Hütter" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
 		<!-- Lets CSS tell whether JS runs, so every feature stays usable without it -->
 		<script is:inline>document.documentElement.classList.add('js');</script>
 		<Font cssVariable="--font-display" preload />
