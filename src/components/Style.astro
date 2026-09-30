@@ -1,0 +1,43 @@
+<section class="section section-alt" id="stil">
+	<div class="section-inner style">
+		<div>
+			<p class="eyebrow"><span aria-hidden="true">♠</span> Der Stil</p>
+			<h2 class="section-title">Zauberkunst mit Humor</h2>
+		</div>
+
+		<p class="style-text">
+			Staunen und Lachen gehören zusammen. Genau das verbinde ich: verblüffende Zauberkunst, ganz
+			nah an den Gästen, gewürzt mit pointiertem Humor. Über zehn Jahre Zauberkunst und die
+			Erfahrung als Schauspieler auf der Theaterbühne sorgen dafür, dass jede Szene Timing hat und
+			jede Pointe sitzt, ob direkt am Tisch oder als Salon-Show. So entstehen Momente, die den
+			Gästen lange im Gedächtnis bleiben.
+		</p>
+	</div>
+</section>
+
+<style>
+	.style {
+		display: grid;
+		gap: var(--space-2);
+	}
+
+	.style-text {
+		max-width: 40rem;
+		margin: 0;
+		font-size: var(--text-base);
+		color: var(--color-text-muted);
+	}
+
+	/* Heading left, text right on large screens */
+	@media (min-width: 960px) {
+		.style {
+			grid-template-columns: 1fr 1.5fr;
+			align-items: start;
+			gap: var(--space-8);
+		}
+
+		.style .section-title {
+			margin-bottom: 0;
+		}
+	}
+</style>
