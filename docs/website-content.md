@@ -86,7 +86,7 @@ Backgrounds alternate automatically between `--bg` (#1C2A4A) and `--bg-deep` (#0
 - **Enquiry form**: Datum, Ort, Anlass, Gästeanzahl, gewünschtes Format, Nachricht, Name*, E-Mail*, Telefon; privacy note with a link to the privacy policy.
   - Sent by the Worker (`src/worker/index.ts`) as a plain-text e-mail to reinhard.huetter.privat@gmail.com, sender "Website magicreini.com" <formular@magicreini.com>, subject "Neue Anfrage: <Anlass> – <Name>". Replying in Gmail goes straight to the enquirer.
   - Protected by Cloudflare Turnstile (only visible when an interaction is needed) and an invisible honeypot field.
-  - Confirmation: "Ihre Anfrage ist angerichtet. Die Antwort kommt innerhalb von [TODO: Zeitraum]." Errors show a German message with kontakt@magicreini.com as alternative. Without JavaScript the form cannot pass Turnstile and shows that alternative.
+  - Confirmation: "Ihre Anfrage ist angerichtet. Ich melde mich in Kürze bei Ihnen!" Errors show a German message with kontakt@magicreini.com as alternative. Without JavaScript the form cannot pass Turnstile and shows that alternative.
 
 ## Footer
 
@@ -116,7 +116,6 @@ Maintained in one place, `src/data/contact.ts`:
 ## Open points
 
 - Impressum and Datenschutz texts.
-- Reply time [TODO: Zeitraum] in the form confirmation.
 - Privacy policy: the draft section on the form and Turnstile must be checked legally.
 - Durations, guest numbers and space requirements of both formats.
 - Verify the figures in the FAQ answers (see above).
