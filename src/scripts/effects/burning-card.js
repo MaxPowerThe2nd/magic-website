@@ -3,10 +3,10 @@
 //
 // Timeline (starts shortly after the page has loaded, as soon as the card is >= 50% visible;
 // restarts on every page load):
-//   ignite 0.4 s  a small glowing dot at the corner
-//   burn    8 s   the burn edge eats diagonally inwards, visibly from the start and ever faster,
+//   ignite 0.25 s a small glowing dot at the corner
+//   burn  2.6 s   the burn edge eats diagonally inwards, visibly from the start and ever faster,
 //                 like real paper; the flames grow with it
-//   fade    2 s   the flames calm down to a small afterburn
+//   fade  1.2 s   the flames calm down to a small afterburn
 //   afterburn     low flames keep flickering on the burnt edge, now and then one goes out
 //                 and relights; the glowing line pulses, an ember rises every few seconds
 // Reduced motion: the end state at once, static, without flames and embers.
@@ -27,9 +27,10 @@ const CORNER_X = 0.38;
 const CORNER_Y = 0.42;
 
 const START_DELAY_MS = 150;
-const IGNITE_MS = 400;
-const BURN_MS = 8000;
-const FADE_MS = 2000;
+// Start delay + ignition + burn = 3 s: the corner has burnt away 3 s after loading
+const IGNITE_MS = 250;
+const BURN_MS = 2600;
+const FADE_MS = 1200;
 
 // Widths of the burn edge zones, in normalized burn distance (1 = final corner size)
 const EDGE_AA = 0.006;
@@ -42,7 +43,7 @@ const MAX_TONGUES = 18;
 // Flame height as a fraction of the card width
 const FLAME_H_START = 0.1;
 const FLAME_H_PEAK = 0.42;
-const FLAME_H_AFTERBURN = 0.13;
+const FLAME_H_AFTERBURN = 0.156;
 
 export function init(root) {
 	const canvas = root.querySelector('.burning-card__canvas');
