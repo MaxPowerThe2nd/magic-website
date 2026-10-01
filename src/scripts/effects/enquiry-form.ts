@@ -1,8 +1,25 @@
-// Effect "enquiry-form": validates the enquiry with clear German messages and sends it to the
-// form service configured in src/data/contact.ts (form action). As long as no service is set,
-// nothing is sent to anyone and no success is faked: the visitor is pointed to phone and e-mail.
+// Effect "enquiry-form": validates the enquiry with clear German messages and sends it with
+// fetch to the Worker (form action, POST /api/anfrage), including the Turnstile token.
+// While sending, the button is disabled. Success shows the confirmation, errors a friendly
+// German message with the e-mail address as an alternative.
+// Without JS the form is a plain POST; the Worker then redirects back to #anfrage-ok / -fehler.
 
 type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+declare global {
+	interface Window {
+		turnstile?: { reset: (widget?: Element | string) => void };
+	}
+}
+
+const CONTACT_EMAIL = 'kontakt@magicreini.com';
+
+const ERROR_MESSAGES: Record<string, string> = {
+	turnstile: `Die Sicherheitsprüfung hat leider nicht geklappt. Bitte versuchen Sie es noch einmal oder schreiben Sie mir direkt an ${CONTACT_EMAIL}.`,
+	missing: 'Bitte geben Sie Ihren Namen und Ihre E-Mail-Adresse an.',
+	'invalid-email': 'Bitte prüfen Sie Ihre E-Mail-Adresse.',
+	default: `Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es später noch einmal oder schreiben Sie mir direkt an ${CONTACT_EMAIL}.`,
+};
 
 export function init(root: HTMLElement) {
 	if (!(root instanceof HTMLFormElement)) return;
@@ -11,16 +28,18 @@ export function init(root: HTMLElement) {
 	const confirmation = document.getElementById(form.dataset.confirmation ?? '');
 	const status = document.getElementById(form.dataset.status ?? '');
 	const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+	const widget = form.querySelector('.cf-turnstile');
 
-	// JS takes over validation, so the button can be used even without a service
+	// JS takes over validation and sending
 	form.noValidate = true;
-	if (submit) submit.disabled = false;
 
 	const fields = [...form.elements].filter(
 		(element): element is Field =>
-			element instanceof HTMLInputElement ||
-			element instanceof HTMLSelectElement ||
-			element instanceof HTMLTextAreaElement,
+			(element instanceof HTMLInputElement ||
+				element instanceof HTMLSelectElement ||
+				element instanceof HTMLTextAreaElement) &&
+			element.name !== 'website' &&
+			element.name !== 'cf-turnstile-response',
 	);
 
 	const errorFor = (field: Field) => document.getElementById(`${field.id}-error`);
@@ -74,22 +93,26 @@ export function init(root: HTMLElement) {
 			return;
 		}
 
-		if (!endpoint) {
-			// TODO: [TODO: Formular-Dienst] – no service configured yet, nothing is sent
-			showStatus(
-				'Der Versand über das Formular ist noch nicht eingerichtet. Bitte rufen Sie mich an oder schreiben Sie mir eine E-Mail – die Kontaktdaten finden Sie unter der Servierglocke.',
-			);
+		const data = new FormData(form);
+		if (!data.get('cf-turnstile-response')) {
+			showStatus('Die Sicherheitsprüfung läuft noch. Bitte versuchen Sie es in einem Moment noch einmal.');
 			return;
 		}
 
 		if (submit) submit.disabled = true;
 		try {
-			const response = await fetch(endpoint, {
+			const response = await fetch(endpoint ?? '/api/anfrage', {
 				method: 'POST',
-				body: new FormData(form),
+				body: data,
 				headers: { Accept: 'application/json' },
 			});
-			if (!response.ok) throw new Error(String(response.status));
+			const result = (await response.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+			if (!response.ok || !result.ok) {
+				showStatus(ERROR_MESSAGES[result.error ?? ''] ?? ERROR_MESSAGES.default);
+				// A Turnstile token can only be used once; get a fresh one for the next attempt
+				if (widget) window.turnstile?.reset(widget);
+				return;
+			}
 
 			form.hidden = true;
 			if (confirmation) {
@@ -97,9 +120,8 @@ export function init(root: HTMLElement) {
 				confirmation.focus();
 			}
 		} catch {
-			showStatus(
-				'Ihre Anfrage konnte leider nicht gesendet werden. Bitte versuchen Sie es später noch einmal oder melden Sie sich per Telefon oder E-Mail.',
-			);
+			showStatus(ERROR_MESSAGES.default);
+			if (widget) window.turnstile?.reset(widget);
 		} finally {
 			if (submit) submit.disabled = false;
 		}

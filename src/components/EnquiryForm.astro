@@ -1,7 +1,9 @@
 ---
-// Structured enquiry form; validation and sending in src/scripts/effects/enquiry-form.ts.
-// Until a form service is set in src/data/contact.ts nothing is sent and no success is shown.
-import { formEndpoint } from '../data/contact';
+// Structured enquiry form. Sent to the Worker (src/worker/index.ts), protected by Cloudflare
+// Turnstile and a honeypot. With JS: src/scripts/effects/enquiry-form.ts validates and sends via
+// fetch. Without JS: a normal POST; the Worker redirects back to #anfrage-ok / #anfrage-fehler
+// and the matching message below is shown via CSS :target.
+import { contact, emailHref, formEndpoint, turnstileSiteKey } from '../data/contact';
 
 const occasions = ['Firmenevent', 'Hochzeit', 'Privatfeier', 'Restaurant', 'Scheidung', 'Sonstiges'];
 const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch offen, bitte beraten'];
@@ -92,19 +94,27 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 			<input id="enquiry-phone" name="telefon" type="tel" autocomplete="tel" />
 		</div>
 
-		<div class="field field-wide form-footer">
-			<p class="required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
-			<!-- Without a form service the button stays disabled when JS is off -->
-			<button class="button" type="submit" disabled={!formEndpoint}>Anfrage senden</button>
+		<!-- Honeypot: invisible for people, bots fill it in; such enquiries are discarded -->
+		<div class="honeypot" aria-hidden="true">
+			<label for="enquiry-website">Website</label>
+			<input id="enquiry-website" name="website" type="text" tabindex="-1" autocomplete="off" />
 		</div>
 
-		{
-			!formEndpoint && (
-				<p class="field-wide">
-					<span class="placeholder-note">[TODO: Formular-Dienst]</span>
-				</p>
-			)
-		}
+		<!-- Cloudflare Turnstile: only becomes visible if an interaction is needed -->
+		<div
+			class="field-wide turnstile cf-turnstile"
+			data-sitekey={turnstileSiteKey}
+			data-language="de"
+			data-theme="dark"
+			data-size="flexible"
+			data-appearance="interaction-only"
+		>
+		</div>
+
+		<div class="field field-wide form-footer">
+			<p class="required-note"><span aria-hidden="true">*</span> Pflichtfeld</p>
+			<button class="button" type="submit">Anfrage senden</button>
+		</div>
 
 		<p class="field-wide privacy-note">
 			Ihre Angaben verwende ich nur, um Ihre Anfrage zu beantworten. Mehr dazu in der{' '}
@@ -117,7 +127,19 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 	<p class="confirmation" id="enquiry-confirmation" role="status" tabindex="-1" hidden>
 		Ihre Anfrage ist angerichtet. Die Antwort kommt innerhalb von [TODO: Zeitraum].
 	</p>
+
+	<!-- Results of a plain form POST without JavaScript, shown via :target after the redirect -->
+	<p class="confirmation form-result" id="anfrage-ok" tabindex="-1">
+		Ihre Anfrage ist angerichtet. Die Antwort kommt innerhalb von [TODO: Zeitraum].
+	</p>
+	<p class="form-status form-result" id="anfrage-fehler" tabindex="-1">
+		Ihre Anfrage konnte leider nicht gesendet werden. Das Formular braucht JavaScript für die
+		Sicherheitsprüfung. Schreiben Sie mir gerne direkt an{' '}
+		<a href={emailHref}>{contact.email}</a>.
+	</p>
 </div>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
 <style>
 	.enquiry {
@@ -125,6 +147,7 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 	}
 
 	.form {
+		position: relative;
 		display: grid;
 		gap: var(--space-4);
 	}
@@ -213,6 +236,31 @@ const formats = ['Tischzauberei (Close-up / Table Hopping)', 'Salon-Show', 'Noch
 		border: 1px solid var(--color-border-strong);
 		border-radius: var(--radius-sm);
 		color: var(--color-text);
+	}
+
+	/* Honeypot stays out of sight and out of the layout */
+	.honeypot {
+		position: absolute;
+		left: -10000px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+	}
+
+	/* No empty gap while Turnstile stays invisible */
+	.turnstile:empty {
+		display: none;
+	}
+
+	/* Messages after a plain POST: hidden until the redirect targets them */
+	.form-result {
+		display: none;
+		margin-top: var(--space-5);
+	}
+
+	.form-result:target {
+		display: block;
+		scroll-margin-top: calc(var(--header-height) + var(--space-6));
 	}
 
 	.required-note {

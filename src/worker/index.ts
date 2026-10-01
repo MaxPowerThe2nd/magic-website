@@ -3,7 +3,8 @@
 //
 // Flow: honeypot check -> Turnstile Siteverify -> field validation -> e-mail via the
 // send_email binding. Requests from the page's fetch() get JSON (Accept: application/json);
-// a plain form POST (no JavaScript) gets a redirect back to the form with ?anfrage=ok|fehler.
+// a plain form POST (no JavaScript) gets a redirect back to the form, to #anfrage-ok or
+// #anfrage-fehler, where the static page shows the matching message via CSS :target.
 //
 // Secrets: TURNSTILE_SECRET_KEY is a Worker secret (dashboard / .dev.vars), never in the repo.
 
@@ -70,7 +71,7 @@ async function handleEnquiry(request: Request, env: Env): Promise<Response> {
 		wantsJson
 			? Response.json(ok ? { ok: true } : { ok: false, error }, { status })
 			: // Plain form POST without JavaScript: back to the form with a visible message
-				Response.redirect(new URL(`/?anfrage=${ok ? 'ok' : 'fehler'}#anfrage`, request.url).toString(), 303);
+				Response.redirect(new URL(`/#anfrage-${ok ? 'ok' : 'fehler'}`, request.url).toString(), 303);
 
 	let form: FormData;
 	try {
