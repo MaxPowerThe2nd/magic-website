@@ -1,10 +1,24 @@
-// Cloudflare Workers configuration: static assets only, no server code.
+// Cloudflare Workers configuration: static assets from Astro plus a small Worker that only
+// handles the enquiry form (POST /api/anfrage). The site itself is not server-rendered.
 // Build with `npx astro build`, test locally with `npx wrangler dev`, publish with `npx wrangler deploy`.
+// The Turnstile secret is a Worker secret (TURNSTILE_SECRET_KEY), locally in .dev.vars, never here.
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "magic-website",
+	"main": "src/worker/index.ts",
 	"compatibility_date": "2026-09-30",
 	"assets": {
-		"directory": "./dist"
-	}
+		"directory": "./dist",
+		"binding": "ASSETS",
+		// Only /api/* runs the Worker first; all other requests are served directly as assets
+		"run_worker_first": ["/api/*"]
+	},
+	"send_email": [
+		{
+			"name": "EMAIL",
+			// Enquiries can only ever go to this verified address, and only from the form sender
+			"destination_address": "reinhard.huetter.privat@gmail.com",
+			"allowed_sender_addresses": ["formular@magicreini.com"]
+		}
+	]
 }
