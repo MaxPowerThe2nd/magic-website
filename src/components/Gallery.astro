@@ -3,34 +3,32 @@ import ImageSlot from './ImageSlot.astro';
 import cardsStageChild from '../images/cards-stage-child.webp';
 import ropeMagicStage from '../images/rope-magic-stage.webp';
 
-// Photos from src/images; add more entries here to fill the gallery
+// Photos from src/images; add more entries here to fill the gallery.
+// No visible text: the photos speak for themselves. The alt text stays for screen readers.
 const photos = [
 	{
 		src: cardsStageChild,
 		alt: 'Reinhard Hütter zeigt einem jungen Zuschauer auf der Bühne ein Kartenkunststück',
-		caption: 'Hautnah: Das Wunder passiert in den Händen der Zuschauer.',
 	},
 	{
 		src: ropeMagicStage,
 		alt: 'Reinhard Hütter bei einer Seilnummer vor rot und blau beleuchtetem Bühnenvorhang',
-		caption: 'Ein Seil, zwei Enden – oder doch nicht?',
 	},
 ];
 ---
 
 <section class="section section-alt" id="fotos">
 	<div class="section-inner">
-		<p class="eyebrow">Fotos &amp; Videos</p>
-		<h2 class="section-title">Magie in Aktion</h2>
+		<!-- Heading only for screen readers and the page outline -->
+		<h2 class="visually-hidden">Fotos &amp; Videos</h2>
 
 		<div class="gallery">
 			{
-				photos.map(({ src, alt, caption }) => (
+				photos.map(({ src, alt }) => (
 					<ImageSlot
 						class="tile"
 						image={src}
 						alt={alt}
-						caption={caption}
 						sizes="(min-width: 960px) 360px, (min-width: 720px) 50vw, 100vw"
 					/>
 				))
