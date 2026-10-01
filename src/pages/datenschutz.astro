@@ -1,13 +1,46 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { contact, emailHref } from '../data/contact';
 ---
 
 <Layout title="Datenschutz – Reinhard Hütter">
 	<section class="section legal">
-		<div class="section-inner">
+		<div class="section-inner legal-inner">
 			<h1 class="section-title">Datenschutz</h1>
 			<p><span class="placeholder-note">Inhalt folgt</span></p>
-			<p>Die Datenschutzerklärung wird hier ergänzt.</p>
+			<p>Die vollständige Datenschutzerklärung wird hier ergänzt.</p>
+
+			<!-- Draft section, must be checked by a lawyer before going live -->
+			<h2>Kontaktformular und Cloudflare Turnstile</h2>
+			<p><span class="placeholder-note">TODO: rechtlich prüfen</span></p>
+			<p>
+				Wenn Sie mir über das Anfrageformular schreiben, verarbeite ich die von Ihnen angegebenen
+				Daten (zum Beispiel Name, E-Mail-Adresse, Telefonnummer, Datum, Ort und Art des Anlasses,
+				Gästeanzahl und Ihre Nachricht), um Ihre Anfrage zu beantworten und gegebenenfalls ein
+				Angebot zu erstellen. Pflichtangaben sind nur Name und E-Mail-Adresse. Rechtsgrundlage ist
+				Art. 6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) bzw. Art. 6 Abs. 1 lit. f DSGVO
+				(berechtigtes Interesse an der Beantwortung von Anfragen).
+			</p>
+			<p>
+				Die Anfrage wird über die Infrastruktur von Cloudflare, Inc. (101 Townsend St, San
+				Francisco, CA 94107, USA) verarbeitet und mir per E-Mail zugestellt. Die Formulardaten
+				werden auf der Website nicht gespeichert. Die E-Mail bewahre ich so lange auf, wie es für
+				die Bearbeitung Ihrer Anfrage und gesetzliche Aufbewahrungspflichten erforderlich ist.
+				[TODO: Speicherdauer festlegen]
+			</p>
+			<p>
+				Zum Schutz vor Spam und automatisierten Anfragen verwende ich Cloudflare Turnstile. Dabei
+				werden technische Informationen über Ihren Browser und Ihr Gerät sowie Ihre IP-Adresse an
+				Cloudflare übermittelt und dort ausgewertet, um zu prüfen, ob die Anfrage von einem Menschen
+				stammt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse am Schutz
+				des Formulars vor Missbrauch). Cloudflare kann Daten in Länder außerhalb der EU, insbesondere
+				in die USA, übertragen. [TODO: Grundlage der Datenübermittlung, z. B. EU-US Data Privacy
+				Framework, prüfen] Weitere Informationen finden Sie in der Datenschutzerklärung von
+				Cloudflare: <a href="https://www.cloudflare.com/privacypolicy/">cloudflare.com/privacypolicy</a>.
+			</p>
+			<p>
+				Sie können mir auch ohne Formular direkt schreiben: <a href={emailHref}>{contact.email}</a>.
+			</p>
 		</div>
 	</section>
 </Layout>
@@ -16,5 +49,19 @@ import Layout from '../layouts/Layout.astro';
 	.legal {
 		padding-top: 7rem;
 		min-height: 70svh;
+	}
+
+	/* Readable line length, left edge stays in line with the header */
+	.legal-inner > * {
+		max-width: 48rem;
+	}
+
+	.legal-inner h2 {
+		margin: var(--space-8) 0 var(--space-3);
+		font-size: var(--text-h3);
+	}
+
+	.legal-inner p {
+		color: var(--color-text-muted);
 	}
 </style>
