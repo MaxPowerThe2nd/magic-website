@@ -4,9 +4,9 @@
 // Timeline (starts shortly after the page has loaded, as soon as the card is >= 50% visible;
 // restarts on every page load):
 //   ignite 0.25 s a small glowing dot at the corner
-//   burn  2.6 s   the burn edge eats diagonally inwards, visibly from the start and ever faster,
+//   burn  2.6 s   the burn edge eats diagonally inwards, exponentially faster,
 //                 like real paper; the flames grow with it
-//   fade  1.6 s   without any pause the flames shrink smoothly to the afterburn size
+//   fade  1.6 s   without any pause the fire blends smoothly into the afterburn (same size)
 //   afterburn     low flames keep flickering on the burnt edge, now and then one goes out
 //                 and relights; the glowing line pulses, an ember rises every few seconds
 // Reduced motion: the end state at once, static, without flames and embers.
@@ -43,7 +43,8 @@ const MAX_TONGUES = 18;
 // Flame height as a fraction of the card width
 const FLAME_H_START = 0.1;
 const FLAME_H_PEAK = 0.42;
-const FLAME_H_AFTERBURN = 0.187;
+// The flames keep exactly the size they have at the end of the burn
+const FLAME_H_AFTERBURN = FLAME_H_PEAK;
 
 export function init(root) {
 	const canvas = root.querySelector('.burning-card__canvas');
@@ -285,7 +286,6 @@ function start(root, canvas, image, reducedMotion) {
 				const life = valueNoise(time * 0.6, tongue.seed + 77);
 				const lifeAlpha = Math.min(1, Math.max(0, (life - 0.22) / 0.15));
 				a *= lerp(1, lifeAlpha, afterburnMix);
-				h *= lerp(1, 0.7 + 0.6 * Math.max(0, life - 0.22), afterburnMix);
 				if (a <= 0.01) continue;
 			}
 			const lean = (valueNoise(time * 1.3, tongue.seed + 13) - 0.5) * h * 0.5;
@@ -383,7 +383,7 @@ function start(root, canvas, image, reducedMotion) {
 			flameAlpha = Math.min(1, p * 10);
 			ignition = Math.max(0, 1 - p * 5);
 		} else if (phase === 'fade') {
-			// No pause after the burn: the flames shrink right away, smoothly, to the afterburn size
+			// No pause after the burn: the fire blends smoothly into the afterburn
 			const p = Math.min(1, (elapsed - IGNITE_MS - BURN_MS) / FADE_MS);
 			afterburnMix = easeInOut(p);
 			flameHeight = lerp(FLAME_H_PEAK, FLAME_H_AFTERBURN, afterburnMix);
@@ -502,10 +502,11 @@ function lerp(a, b, t) {
 	return a + (b - a) * t;
 }
 
-// Burnt area over time: burns right away and keeps accelerating
+// Burnt area over time: exponential growth, normalised to 0..1
+const BURN_GROWTH = 3.5;
 function burnCurve(t) {
 	const x = Math.min(1, Math.max(0, t));
-	return 0.32 * x + 0.68 * Math.pow(x, 2);
+	return (Math.exp(BURN_GROWTH * x) - 1) / (Math.exp(BURN_GROWTH) - 1);
 }
 
 function easeInOut(t) {
