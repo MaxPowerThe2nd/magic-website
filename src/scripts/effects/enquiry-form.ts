@@ -9,8 +9,14 @@ type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 declare global {
 	interface Window {
 		turnstile?: { reset: (widget?: Element | string) => void };
+		enquiryTurnstileDone?: () => void;
+		enquiryTurnstileError?: () => void;
+		enquiryTurnstileExpired?: () => void;
 	}
 }
+
+// How long a submit waits for a Turnstile check that is still running in the background
+const TOKEN_WAIT_MS = 4000;
 
 const CONTACT_EMAIL = 'kontakt@magicreini.com';
 
@@ -83,6 +89,40 @@ export function init(root: HTMLElement) {
 		status.hidden = false;
 	};
 
+	const tokenValue = () =>
+		form.querySelector<HTMLInputElement>('[name="cf-turnstile-response"]')?.value ?? '';
+
+	// Turnstile reports its state through these global callbacks (named in the widget's data-*)
+	let turnstileFailed = false;
+	let sendWhenVerified = false;
+	let tokenWaiters: Array<() => void> = [];
+	window.enquiryTurnstileDone = () => {
+		turnstileFailed = false;
+		tokenWaiters.forEach((resolve) => resolve());
+		tokenWaiters = [];
+		// The visitor had to tick the box after pressing "send": send now automatically
+		if (sendWhenVerified) {
+			sendWhenVerified = false;
+			form.requestSubmit();
+		}
+	};
+	window.enquiryTurnstileError = () => {
+		turnstileFailed = true;
+		tokenWaiters.forEach((resolve) => resolve());
+		tokenWaiters = [];
+	};
+	window.enquiryTurnstileExpired = () => {
+		if (widget) window.turnstile?.reset(widget);
+	};
+
+	// Resolves once a token exists, Turnstile failed, or the wait time is over
+	const waitForToken = () =>
+		new Promise<void>((resolve) => {
+			if (tokenValue() || turnstileFailed) return resolve();
+			tokenWaiters.push(resolve);
+			window.setTimeout(resolve, TOKEN_WAIT_MS);
+		});
+
 	form.addEventListener('submit', async (event) => {
 		event.preventDefault();
 		if (status) status.hidden = true;
@@ -93,13 +133,26 @@ export function init(root: HTMLElement) {
 			return;
 		}
 
-		const data = new FormData(form);
-		if (!data.get('cf-turnstile-response')) {
-			showStatus('Die Sicherheitsprüfung läuft noch. Bitte versuchen Sie es in einem Moment noch einmal.');
+		if (submit) submit.disabled = true;
+
+		// The security check may still be running in the background: wait briefly for it
+		if (!tokenValue()) await waitForToken();
+		if (!tokenValue()) {
+			if (submit) submit.disabled = false;
+			if (turnstileFailed) {
+				showStatus(ERROR_MESSAGES.turnstile);
+				if (widget) window.turnstile?.reset(widget);
+				return;
+			}
+			// Turnstile asks for a click: point to the checkbox, send automatically afterwards
+			sendWhenVerified = true;
+			showStatus('Bitte bestätigen Sie noch kurz mit dem Häkchen, dass Sie ein Mensch sind. Danach wird Ihre Anfrage automatisch gesendet.');
+			const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+			widget?.scrollIntoView({ block: 'center', behavior: smooth ? 'smooth' : 'auto' });
 			return;
 		}
 
-		if (submit) submit.disabled = true;
+		const data = new FormData(form);
 		try {
 			const response = await fetch(endpoint ?? '/api/anfrage', {
 				method: 'POST',
