@@ -84,8 +84,9 @@ Backgrounds alternate automatically between `--bg` (#1C2A4A) and `--bg-deep` (#0
 - Heading "Bereit für ein kleines Wunder?" and the lead "Erzählen Sie mir von Ihrem Anlass. Je mehr ich weiß, desto passender wird das Programm."
 - **Silver tray with cloche** (the only place with the tray motif): the button "Ist das Ihre Karte? – Kontaktdaten anzeigen" lifts the cloche and reveals a business card with name, phone, e-mail and the button "Show anfragen". About 3 s after the section comes into view the cloche lifts briefly as a hint.
 - **Enquiry form**: Datum, Ort, Anlass, Gästeanzahl, gewünschtes Format, Nachricht, Name*, E-Mail*, Telefon; privacy note with a link to the privacy policy.
-  - The form does **not send anything yet**: no form service is configured (`formEndpoint` in `src/data/contact.ts`, marked [TODO: Formular-Dienst]). Visitors get a notice to call or e-mail instead.
-  - Once a service is set, the confirmation reads "Ihre Anfrage ist angerichtet. Die Antwort kommt innerhalb von [TODO: Zeitraum]."
+  - Sent by the Worker (`src/worker/index.ts`) as a plain-text e-mail to reinhard.huetter.privat@gmail.com, sender "Website magicreini.com" <formular@magicreini.com>, subject "Neue Anfrage: <Anlass> – <Name>". Replying in Gmail goes straight to the enquirer.
+  - Protected by Cloudflare Turnstile (only visible when an interaction is needed) and an invisible honeypot field.
+  - Confirmation: "Ihre Anfrage ist angerichtet. Die Antwort kommt innerhalb von [TODO: Zeitraum]." Errors show a German message with kontakt@magicreini.com as alternative. Without JavaScript the form cannot pass Turnstile and shows that alternative.
 
 ## Footer
 
@@ -99,7 +100,7 @@ On phones a bar with call and e-mail buttons and "Show anfragen" appears at the 
 
 Maintained in one place, `src/data/contact.ts`:
 - Phone: +43 677 62179694
-- E-mail: office@huettermagic.com
+- E-mail: kontakt@magicreini.com (Email Routing forwards it to reinhard.huetter.privat@gmail.com)
 
 ## Where content is maintained
 
@@ -115,7 +116,8 @@ Maintained in one place, `src/data/contact.ts`:
 ## Open points
 
 - Impressum and Datenschutz texts.
-- Form service for the enquiry form, and the reply time [TODO: Zeitraum].
+- Reply time [TODO: Zeitraum] in the form confirmation.
+- Privacy policy: the draft section on the form and Turnstile must be checked legally.
 - Durations, guest numbers and space requirements of both formats.
 - Verify the figures in the FAQ answers (see above).
 - Real testimonials, then switch the section back on.

@@ -31,8 +31,13 @@ After each approved step, commit the changes with a short, clear English commit 
 Web images live in /src/images inside the project, so Astro can optimize them. Original photos are never stored in the project; they stay outside the repository. Every image added to /src/images is resized and compressed to a web-ready size first; Astro then generates the smaller variants for mobile and modern formats (mobile first, responsive images via srcset and sizes). File names are lowercase English words separated by hyphens, no spaces or special characters.
 
 # Hosting
-The site is hosted on Cloudflare Workers as static assets only (no adapter, no server functions).
-- Config: wrangler.jsonc (name "magic-website", assets.directory "./dist"); wrangler is a devDependency.
+The site is hosted on Cloudflare Workers as static assets (no Astro adapter, no SSR) plus one small Worker for the enquiry form. Workers Builds deploys every push to main, so a push goes live immediately.
+- Config: wrangler.jsonc (name "magic-website", assets.directory "./dist", main "src/worker/index.ts"); wrangler is a devDependency.
+- Worker: only POST /api/anfrage runs the Worker (assets.run_worker_first ["/api/*"]); every other request is served directly from the static assets.
+- Enquiry form: honeypot field, Cloudflare Turnstile (Siteverify with the Worker secret TURNSTILE_SECRET_KEY), server-side validation, then e-mail via the send_email binding EMAIL (destination restricted to reinhard.huetter.privat@gmail.com, sender formular@magicreini.com, Reply-To = enquirer). With JS the page sends via fetch (JSON response); without JS the Worker redirects to /#anfrage-ok or /#anfrage-fehler.
+- Secrets never go into the repository. TURNSTILE_SECRET_KEY is set in the Cloudflare dashboard; for local tests it lives in .dev.vars (git-ignored) with the official Turnstile test secret.
+- Turnstile sitekey: public constant in src/data/contact.ts; override at build time with PUBLIC_TURNSTILE_SITE_KEY (local tests: 1x00000000000000000000AA).
+- Local test of the form: PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA npm run build, then npx wrangler dev; sent mails are only simulated and written to .wrangler/tmp/email.
 - Build: npx astro build (output in ./dist).
 - Local test of the built site: npx wrangler dev (http://localhost:8787).
 - Deploy: npx wrangler login once, then npx wrangler deploy.

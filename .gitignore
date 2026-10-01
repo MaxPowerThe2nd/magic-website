@@ -32,3 +32,6 @@ src/images/reinhard-ohne-kranz.png
 
 # wrangler local state
 .wrangler/
+
+# local Worker secrets
+.dev.vars

@@ -58,6 +58,11 @@ a:hover {
 	outline-offset: 3px;
 }
 
+/* The hidden attribute always wins, even over display rules of components */
+[hidden] {
+	display: none !important;
+}
+
 /* Hidden visually, still read by screen readers */
 .visually-hidden {
 	position: absolute;
