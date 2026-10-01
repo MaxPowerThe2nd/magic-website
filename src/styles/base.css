@@ -83,7 +83,9 @@ a:hover {
 	padding-block: var(--section-space);
 }
 
-.section-alt {
+/* Sections alternate between --bg and --bg-deep, counted automatically,
+   so the rhythm stays right when a section is hidden */
+main > section:nth-of-type(even) {
 	background: var(--bg-deep);
 }
 

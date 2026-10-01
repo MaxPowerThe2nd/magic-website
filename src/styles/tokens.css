@@ -85,7 +85,7 @@
 	--space-8: 3rem;
 	/* One side gutter for every block on the page: 24px on phones up to 80px on desktop */
 	--gutter: clamp(1.5rem, 5vw, 5rem);
-	--section-space: 4.5rem;
+	--section-space: 3.5rem;
 	--content-width: 1200px;
 	--header-height: 4rem;
 	--tap-target: 48px;
@@ -113,7 +113,7 @@
 		--text-display: clamp(2.75rem, 4.6vw, 4rem);
 		--text-points: 1.5rem;
 		--tracking-interlude: 0.2em;
-		--section-space: 6.5rem;
+		--section-space: 5rem;
 		--header-height: 4.5rem;
 	}
 }

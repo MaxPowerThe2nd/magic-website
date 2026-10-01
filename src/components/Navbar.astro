@@ -1,6 +1,8 @@
 ---
+import { sections } from '../data/sections';
+
 // Links point to the one-pager sections (in the order given in AGENTS.md)
-const links = [
+const allLinks = [
 	{ href: '/#shows', label: 'Shows' },
 	{ href: '/#fotos', label: 'Fotos & Videos' },
 	{ href: '/#stimmen', label: 'Stimmen' },
@@ -8,6 +10,8 @@ const links = [
 	{ href: '/#faq', label: 'FAQ' },
 	{ href: '/#kontakt', label: 'Kontakt' },
 ];
+// Hidden sections also disappear from the menu
+const links = allLinks.filter((link) => sections.testimonials || link.href !== '/#stimmen');
 ---
 
 <header class="navbar" data-navbar>

@@ -9,6 +9,7 @@ import Testimonials from '../components/Testimonials.astro';
 import About from '../components/About.astro';
 import Faq from '../components/Faq.astro';
 import Contact from '../components/Contact.astro';
+import { sections } from '../data/sections';
 ---
 
 <Layout
@@ -20,7 +21,7 @@ import Contact from '../components/Contact.astro';
 	<Occasions />
 	<Formats />
 	<Gallery />
-	<Testimonials />
+	{sections.testimonials && <Testimonials />}
 	<About />
 	<Faq />
 	<Contact />
