@@ -138,12 +138,21 @@ async function verifyTurnstile(token: string, secret: string, ip?: string): Prom
 		return false;
 	}
 	const body = new FormData();
-	body.append('secret', secret);
+	// Trim in case the secret was pasted with a trailing space or line break
+	body.append('secret', secret.trim());
 	body.append('response', token);
 	if (ip) body.append('remoteip', ip);
 	try {
 		const response = await fetch(SITEVERIFY_URL, { method: 'POST', body });
-		const result = (await response.json()) as { success?: boolean };
+		const result = (await response.json()) as { success?: boolean; hostname?: string; 'error-codes'?: string[] };
+		if (result.success !== true) {
+			// Visible in the Worker logs (dashboard: Workers & Pages -> magic-website -> Logs)
+			console.error('Turnstile rejected the token', {
+				errors: result['error-codes'],
+				hostname: result.hostname,
+				secretLength: secret.trim().length,
+			});
+		}
 		return result.success === true;
 	} catch (error) {
 		console.error('Turnstile Siteverify failed', error);

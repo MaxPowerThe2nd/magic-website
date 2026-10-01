@@ -13,6 +13,8 @@
 		// Only /api/* runs the Worker first; all other requests are served directly as assets
 		"run_worker_first": ["/api/*"]
 	},
+	// Keep Worker logs in the dashboard (needed to see why an enquiry failed)
+	"observability": { "enabled": true },
 	"send_email": [
 		{
 			"name": "EMAIL",
