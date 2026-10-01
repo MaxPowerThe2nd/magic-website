@@ -8,6 +8,7 @@ const effects: Record<string, () => Promise<EffectModule>> = {
 	cloche: () => import('./cloche'),
 	'enquiry-form': () => import('./enquiry-form'),
 	'floating-cards': () => import('./floating-cards'),
+	slider: () => import('./slider'),
 	'video-lightbox': () => import('./video-lightbox'),
 };
 

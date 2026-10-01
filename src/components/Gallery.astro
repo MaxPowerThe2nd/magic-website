@@ -1,9 +1,9 @@
 ---
-import ImageSlot from './ImageSlot.astro';
+import { Picture } from 'astro:assets';
 import cardsStageChild from '../images/cards-stage-child.webp';
 import ropeMagicStage from '../images/rope-magic-stage.webp';
 
-// Photos from src/images; add more entries here to fill the gallery.
+// Photos from src/images; add more entries here to fill the slider.
 // No visible text: the photos speak for themselves. The alt text stays for screen readers.
 const photos = [
 	{
@@ -22,41 +22,133 @@ const photos = [
 		<!-- Heading only for screen readers and the page outline -->
 		<h2 class="visually-hidden">Fotos &amp; Videos</h2>
 
-		<div class="gallery">
-			{
-				photos.map(({ src, alt }) => (
-					<ImageSlot
-						class="tile"
-						image={src}
-						alt={alt}
-						sizes="(min-width: 960px) 360px, (min-width: 720px) 50vw, 100vw"
-					/>
-				))
-			}
+		<!-- Effect module "slider": a horizontal row with scroll snapping; swipe on phones,
+		     arrow buttons with JS. Without JS the row simply scrolls sideways. -->
+		<div class="slider" data-effect="slider">
+			<ul class="slider-track" id="photo-slider" tabindex="0" aria-label="Fotos">
+				{
+					photos.map(({ src, alt }) => (
+						<li class="slide">
+							<Picture
+								src={src}
+								alt={alt}
+								formats={['avif', 'webp']}
+								fallbackFormat="webp"
+								widths={[400, 800, 1200]}
+								sizes="(min-width: 960px) 760px, 78vw"
+							/>
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="slider-controls">
+				<button class="slider-button" type="button" aria-controls="photo-slider" data-slider-prev>
+					<span aria-hidden="true">←</span>
+					<span class="visually-hidden">Vorheriges Foto</span>
+				</button>
+				<button class="slider-button" type="button" aria-controls="photo-slider" data-slider-next>
+					<span aria-hidden="true">→</span>
+					<span class="visually-hidden">Nächstes Foto</span>
+				</button>
+			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.gallery {
-		display: grid;
-		gap: var(--space-5);
+	.slider {
+		/* Height of the photos; their width follows each photo's own proportions */
+		--slide-height: clamp(20rem, 60vh, 26rem);
 	}
 
-	.gallery :global(.tile img) {
-		aspect-ratio: 4 / 5;
+	.slider-track {
+		display: flex;
+		gap: var(--space-4);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		overflow-x: auto;
+		overscroll-behavior-x: contain;
+		scroll-snap-type: x mandatory;
+		scrollbar-width: none;
+	}
+
+	.slider-track::-webkit-scrollbar {
+		display: none;
+	}
+
+	.slider-track:focus-visible {
+		outline-offset: 4px;
+	}
+
+	.slide {
+		flex: none;
+		scroll-snap-align: start;
+	}
+
+	.slide :global(img) {
+		width: auto;
+		height: var(--slide-height);
+		/* Wide photos never take more than most of the screen, so the next one peeks in */
+		max-width: 78vw;
 		object-fit: cover;
+		border-radius: var(--radius);
+	}
+
+	/* Arrow buttons only with JS */
+	.slider-controls {
+		display: none;
+		justify-content: flex-end;
+		gap: var(--space-3);
+		margin-top: var(--space-4);
+	}
+
+	.slider:global(.is-ready) .slider-controls {
+		display: flex;
+	}
+
+	.slider-button {
+		display: grid;
+		place-items: center;
+		width: var(--tap-target);
+		height: var(--tap-target);
+		padding: 0;
+		border: 1px solid var(--color-border-strong);
+		border-radius: 50%;
+		font-size: var(--text-lead);
+		line-height: 1;
+		color: var(--color-accent);
+		background: none;
+		cursor: pointer;
+		transition:
+			border-color var(--duration-fast),
+			opacity var(--duration-fast);
+	}
+
+	.slider-button:hover,
+	.slider-button:focus-visible {
+		border-color: var(--color-accent);
+	}
+
+	.slider-button:disabled {
+		opacity: 0.35;
+		cursor: default;
 	}
 
 	@media (min-width: 720px) {
-		.gallery {
-			grid-template-columns: repeat(2, 1fr);
+		.slider {
+			--slide-height: clamp(24rem, 62vh, 35rem);
+		}
+
+		.slide :global(img) {
+			max-width: 70vw;
 		}
 	}
 
-	@media (min-width: 960px) {
-		.gallery {
-			grid-template-columns: repeat(3, 1fr);
+	@media (prefers-reduced-motion: reduce) {
+		.slider-button {
+			transition: none;
 		}
 	}
 </style>
