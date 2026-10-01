@@ -22,8 +22,8 @@ const photos = [
 		<!-- Heading only for screen readers and the page outline -->
 		<h2 class="visually-hidden">Fotos &amp; Videos</h2>
 
-		<!-- Effect module "slider": a horizontal row with scroll snapping; swipe on phones,
-		     arrow buttons with JS. Without JS the row simply scrolls sideways. -->
+		<!-- Effect module "slider": a horizontal row with scroll snapping. Touch devices swipe,
+		     devices with a mouse get arrow buttons (JS). Without JS the row simply scrolls sideways. -->
 		<div class="slider" data-effect="slider">
 			<ul class="slider-track" id="photo-slider" tabindex="0" aria-label="Fotos">
 				{
@@ -85,6 +85,8 @@ const photos = [
 	.slide {
 		flex: none;
 		scroll-snap-align: start;
+		/* One swipe moves exactly one photo */
+		scroll-snap-stop: always;
 	}
 
 	.slide :global(img) {
@@ -106,6 +108,13 @@ const photos = [
 
 	.slider:global(.is-ready) .slider-controls {
 		display: flex;
+	}
+
+	/* Touch devices: just swipe left and right, no arrow buttons */
+	@media (hover: none) and (pointer: coarse) {
+		.slider:global(.is-ready) .slider-controls {
+			display: none;
+		}
 	}
 
 	.slider-button {
