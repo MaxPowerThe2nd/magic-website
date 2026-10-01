@@ -6,7 +6,7 @@
 //   ignite 0.25 s a small glowing dot at the corner
 //   burn  2.6 s   the burn edge eats diagonally inwards, visibly from the start and ever faster,
 //                 like real paper; the flames grow with it
-//   fade  1.2 s   the flames calm down to a small afterburn
+//   fade  1.6 s   without any pause the flames shrink smoothly to the afterburn size
 //   afterburn     low flames keep flickering on the burnt edge, now and then one goes out
 //                 and relights; the glowing line pulses, an ember rises every few seconds
 // Reduced motion: the end state at once, static, without flames and embers.
@@ -30,7 +30,7 @@ const START_DELAY_MS = 150;
 // Start delay + ignition + burn = 3 s: the corner has burnt away 3 s after loading
 const IGNITE_MS = 250;
 const BURN_MS = 2600;
-const FADE_MS = 1200;
+const FADE_MS = 1600;
 
 // Widths of the burn edge zones, in normalized burn distance (1 = final corner size)
 const EDGE_AA = 0.006;
@@ -43,7 +43,7 @@ const MAX_TONGUES = 18;
 // Flame height as a fraction of the card width
 const FLAME_H_START = 0.1;
 const FLAME_H_PEAK = 0.42;
-const FLAME_H_AFTERBURN = 0.156;
+const FLAME_H_AFTERBURN = 0.187;
 
 export function init(root) {
 	const canvas = root.querySelector('.burning-card__canvas');
@@ -252,16 +252,18 @@ function start(root, canvas, image, reducedMotion) {
 		target.fill();
 	};
 
-	// Flames: tongues anchored on points spread along the current edge
-	const drawFlames = (height, alpha, afterburn) => {
+	// Flames: tongues anchored on points spread along the current edge.
+	// afterburnMix 0..1 blends from the burning look into the afterburn look, so the
+	// transition has no jumps (same tongues, flicker and on/off behaviour fade in gradually)
+	const drawFlames = (height, alpha, afterburnMix) => {
 		const pts = edge.points;
 		if (alpha <= 0 || height <= 0 || pts.length < 2) return;
 
 		const [firstX, firstY] = pts[0];
 		const [lastX, lastY] = pts[pts.length - 1];
 		const span = Math.hypot(lastX - firstX, lastY - firstY);
-		// More edge, more tongues; the afterburn has fewer, lower ones
-		const spacing = cardW * (afterburn ? 0.075 : 0.055);
+		// More edge, more tongues; a constant spacing keeps every tongue in place during the transition
+		const spacing = cardW * 0.06;
 		const active = Math.max(2, Math.min(MAX_TONGUES, Math.round(span / spacing) + 1));
 		const time = elapsed / 1000;
 		const flameH = cardW * height;
@@ -278,12 +280,13 @@ function start(root, canvas, image, reducedMotion) {
 			const flutter = valueNoise(time * tongue.speed * 2.7, tongue.seed + 31);
 			let h = flameH * tongue.size * (0.45 + 0.55 * flicker + 0.2 * (flutter - 0.5));
 			let a = alpha;
-			if (afterburn) {
-				// Now and then a small flame goes out and relights
+			if (afterburnMix > 0) {
+				// Afterburn: now and then a small flame goes out and relights
 				const life = valueNoise(time * 0.6, tongue.seed + 77);
-				if (life < 0.22) continue;
-				a *= Math.min(1, (life - 0.22) / 0.15);
-				h *= 0.7 + 0.6 * (life - 0.22);
+				const lifeAlpha = Math.min(1, Math.max(0, (life - 0.22) / 0.15));
+				a *= lerp(1, lifeAlpha, afterburnMix);
+				h *= lerp(1, 0.7 + 0.6 * Math.max(0, life - 0.22), afterburnMix);
+				if (a <= 0.01) continue;
 			}
 			const lean = (valueNoise(time * 1.3, tongue.seed + 13) - 0.5) * h * 0.5;
 			drawTongue(layerCtx, x, y + cardW * 0.01, h, lean, a);
@@ -293,7 +296,7 @@ function start(root, canvas, image, reducedMotion) {
 		const [midX, midY] = pts[Math.floor(pts.length / 2)];
 		const radius = Math.max(span * 0.8, flameH * 1.2);
 		const halo = layerCtx.createRadialGradient(midX, midY - flameH * 0.3, 0, midX, midY - flameH * 0.3, radius);
-		halo.addColorStop(0, rgba(colors.glow, alpha * (afterburn ? 0.12 : 0.22)));
+		halo.addColorStop(0, rgba(colors.glow, alpha * lerp(0.22, 0.12, afterburnMix)));
 		halo.addColorStop(1, rgba(colors.glow, 0));
 		layerCtx.fillStyle = halo;
 		layerCtx.fillRect(0, 0, cssW, cssH);
@@ -366,6 +369,7 @@ function start(root, canvas, image, reducedMotion) {
 		let flameHeight = 0;
 		let flameAlpha = 0;
 		let ignition = 0;
+		let afterburnMix = 0;
 
 		if (phase === 'ignite') {
 			ignition = elapsed / IGNITE_MS;
@@ -379,22 +383,28 @@ function start(root, canvas, image, reducedMotion) {
 			flameAlpha = Math.min(1, p * 10);
 			ignition = Math.max(0, 1 - p * 5);
 		} else if (phase === 'fade') {
+			// No pause after the burn: the flames shrink right away, smoothly, to the afterburn size
 			const p = Math.min(1, (elapsed - IGNITE_MS - BURN_MS) / FADE_MS);
-			flameHeight = lerp(FLAME_H_PEAK, FLAME_H_AFTERBURN, easeOut(p));
-			flameAlpha = lerp(1, 0.85, p);
+			afterburnMix = easeInOut(p);
+			flameHeight = lerp(FLAME_H_PEAK, FLAME_H_AFTERBURN, afterburnMix);
+			flameAlpha = lerp(1, 0.85, afterburnMix);
 		} else if (phase === 'afterburn') {
+			afterburnMix = 1;
 			flameHeight = FLAME_H_AFTERBURN;
 			flameAlpha = 0.85;
 		}
 
-		if (phase === 'afterburn' || phase === 'still') {
-			// Weak, slow pulse of the glowing line (static with reduced motion)
-			glowStrength = phase === 'still' ? 0.8 : 0.65 + 0.25 * Math.sin((elapsed / 3500) * Math.PI * 2);
+		if (phase === 'fade' || phase === 'afterburn') {
+			// Weak, slow pulse of the glowing line, blended in during the transition
+			const pulse = 0.65 + 0.25 * Math.sin((elapsed / 3500) * Math.PI * 2);
+			glowStrength = lerp(1, pulse, afterburnMix);
+		} else if (phase === 'still') {
+			glowStrength = 0.8;
 		}
 
 		renderCard();
 		drawCardTo(ctx);
-		drawFlames(flameHeight, flameAlpha, phase === 'afterburn');
+		drawFlames(flameHeight, flameAlpha, afterburnMix);
 		drawIgnition(ignition);
 		if (!reducedMotion) drawEmbers(dtSeconds);
 	};
@@ -498,8 +508,9 @@ function burnCurve(t) {
 	return 0.32 * x + 0.68 * Math.pow(x, 2);
 }
 
-function easeOut(t) {
-	return 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 2);
+function easeInOut(t) {
+	const x = Math.min(1, Math.max(0, t));
+	return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
 }
 
 function rgba([r, g, b], a) {
