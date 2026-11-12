@@ -1,7 +1,13 @@
 ---
 import { Picture } from 'astro:assets';
-import aboutImage from '../images/magician-concentrating.webp';
-import aboutAccent from '../images/card-red-circle.webp';
+import magicianConcentrating from '../images/magician-concentrating.webp';
+import magicianSmilingStanding from '../images/magician-smiling-standing.webp';
+
+// Uncropped photos at their own aspect ratio, sharing one row height
+const photos = [
+	{ src: magicianConcentrating, alt: 'Reinhard Hütter konzentriert bei einem Kunststück' },
+	{ src: magicianSmilingStanding, alt: 'Reinhard Hütter lächelnd am Stehtisch' },
+];
 ---
 
 <section class="section" id="ueber-mich">
@@ -28,26 +34,20 @@ import aboutAccent from '../images/card-red-circle.webp';
 		</div>
 
 		<div class="about-stage">
-			<figure class="about-portrait">
-				<Picture
-					src={aboutImage}
-					alt="Reinhard Hütter konzentriert bei einem Kunststück"
-					formats={['avif', 'webp']}
-					fallbackFormat="webp"
-					widths={[400, 800, 1200]}
-					sizes="(min-width: 960px) 300px, 45vw"
-				/>
-			</figure>
-			<figure class="about-accent">
-				<Picture
-					src={aboutAccent}
-					alt="Reinhard Hütter zeigt eine Karte mit rotem Kreis"
-					formats={['avif', 'webp']}
-					fallbackFormat="webp"
-					widths={[400, 800]}
-					sizes="(min-width: 960px) 300px, 45vw"
-				/>
-			</figure>
+			{
+				photos.map(({ src, alt }) => (
+					<figure class="about-photo" style={`--ar: ${src.width / src.height};`}>
+						<Picture
+							src={src}
+							alt={alt}
+							formats={['avif', 'webp']}
+							fallbackFormat="webp"
+							widths={[400, 800, 1067]}
+							sizes="(min-width: 960px) 300px, 45vw"
+						/>
+					</figure>
+				))
+			}
 		</div>
 	</div>
 </section>
@@ -85,36 +85,27 @@ import aboutAccent from '../images/card-red-circle.webp';
 	}
 
 	.about-stage {
-		position: relative;
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		display: flex;
 		gap: var(--space-2);
-		align-items: start;
+		align-items: flex-start;
 		max-width: 28rem;
 	}
 
-	.about-portrait,
-	.about-accent {
+	.about-photo {
+		flex: var(--ar) 1 0;
+		min-width: 0;
 		margin: 0;
 		overflow: hidden;
 		border-radius: var(--radius);
 		background: var(--color-surface);
+		aspect-ratio: var(--ar);
 	}
 
-	.about-portrait :global(img),
-	.about-accent :global(img) {
+	.about-photo :global(picture),
+	.about-photo :global(img) {
 		display: block;
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
-	}
-
-	.about-portrait {
-		aspect-ratio: 3 / 4;
-	}
-
-	.about-accent {
-		aspect-ratio: 3 / 4;
 	}
 
 	@media (min-width: 960px) {

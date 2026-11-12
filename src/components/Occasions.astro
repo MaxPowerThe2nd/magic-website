@@ -44,7 +44,7 @@ const occasions: {
 				occasions.map(({ label, kicker, image, alt }) => (
 					<li class="occasion-panel">
 						<div class="occasion-photos">
-							<figure class="occasion-hero">
+							<figure class="occasion-hero" style={`--ar: ${image.width / image.height};`}>
 								<Picture
 									src={image}
 									alt={alt}
@@ -126,7 +126,7 @@ const occasions: {
 		overflow: hidden;
 		border-radius: var(--radius);
 		background: var(--color-surface);
-		aspect-ratio: 3 / 2;
+		aspect-ratio: var(--ar);
 	}
 
 	.occasion-hero :global(img) {

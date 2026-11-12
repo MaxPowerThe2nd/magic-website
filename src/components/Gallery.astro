@@ -1,12 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
 import drawingRevealPointing from '../images/drawing-reveal-pointing.webp';
-import tableHoppingAudience from '../images/table-hopping-audience.webp';
-import standingTableGuest from '../images/standing-table-guest.webp';
-import cardHandoverHands from '../images/card-handover-hands.webp';
-import magicianConcentrating from '../images/magician-concentrating.webp';
-import magicianSmilingStanding from '../images/magician-smiling-standing.webp';
-import ropeGirlLaughing from '../images/rope-girl-laughing.webp';
 import ropeBoyLaughing from '../images/rope-boy-laughing.webp';
 import dollarSignGuest from '../images/dollar-sign-guest.webp';
 import scarfTrickGuests from '../images/scarf-trick-guests.webp';
@@ -14,30 +8,19 @@ import cupsAndBallsSmile from '../images/cups-and-balls-smile.webp';
 import cardRedCircle from '../images/card-red-circle.webp';
 
 // Justified rows: every row spreads its photos over the full width at one common height.
-// Each tile's flex weight equals its aspect ratio, so heights match exactly and no gaps can appear.
-// `land` = landscape (3:2), `port` = portrait (2:3). Row mix: 2 landscape, 4 portrait, 2 x (landscape, portrait, landscape).
-const L = 'land';
-const P = 'port';
+// Each tile keeps the photo's own aspect ratio (nothing is cropped) and its flex weight equals
+// that ratio, so heights match exactly and no gaps can appear.
+// Photos shown elsewhere on the page (Style, Occasions, About) are not repeated here.
 const rows = [
 	[
-		{ src: drawingRevealPointing, alt: 'Reinhard Hütter zeigt einem Gast eine Zeichnung mit rotem Kreis', kind: L },
-		{ src: tableHoppingAudience, alt: 'Reinhard Hütter beim Table Hopping, Gäste schauen gespannt zu', kind: L },
+		{ src: drawingRevealPointing, alt: 'Reinhard Hütter zeigt einem Gast eine Zeichnung mit rotem Kreis' },
+		{ src: cardRedCircle, alt: 'Reinhard Hütter zeigt eine Karte mit rotem Kreis' },
+		{ src: dollarSignGuest, alt: 'Reinhard Hütter mit einem Gast und einem Dollarzeichen' },
 	],
 	[
-		{ src: standingTableGuest, alt: 'Reinhard Hütter zeigt einem Gast am Stehtisch einen Kartenkunststück', kind: P },
-		{ src: cardHandoverHands, alt: 'Hände übergeben Spielkarten bei einem Kartenkunststück', kind: P },
-		{ src: magicianConcentrating, alt: 'Reinhard Hütter konzentriert bei einem Kunststück', kind: P },
-		{ src: magicianSmilingStanding, alt: 'Reinhard Hütter lächelnd am Stehtisch', kind: P },
-	],
-	[
-		{ src: ropeGirlLaughing, alt: 'Ein Mädchen lacht bei einer Seilnummer, im Hintergrund staunende Gäste', kind: L },
-		{ src: cupsAndBallsSmile, alt: 'Reinhard Hütter lächelt bei einem Becherspiel am Tisch', kind: P },
-		{ src: ropeBoyLaughing, alt: 'Ein Junge lacht begeistert bei einer Seilnummer', kind: L },
-	],
-	[
-		{ src: dollarSignGuest, alt: 'Reinhard Hütter mit einem Gast und einem Dollarzeichen', kind: L },
-		{ src: cardRedCircle, alt: 'Reinhard Hütter zeigt eine Karte mit rotem Kreis', kind: P },
-		{ src: scarfTrickGuests, alt: 'Reinhard Hütter mit Tuch und zwei Gästen', kind: L },
+		{ src: scarfTrickGuests, alt: 'Reinhard Hütter mit Tuch und zwei Gästen' },
+		{ src: cupsAndBallsSmile, alt: 'Reinhard Hütter lächelt bei einem Becherspiel am Tisch' },
+		{ src: ropeBoyLaughing, alt: 'Ein Junge lacht begeistert bei einer Seilnummer' },
 	],
 ];
 ---
@@ -53,15 +36,19 @@ const rows = [
 			{
 				rows.map((row) => (
 					<div class="mosaic-row" role="presentation">
-						{row.map(({ src, alt, kind }) => (
-							<figure class={`tile tile-${kind}`} role="listitem">
+						{row.map(({ src, alt }) => (
+							<figure
+								class={`tile ${src.width >= src.height ? 'tile-land' : 'tile-port'}`}
+								role="listitem"
+								style={`--ar: ${src.width / src.height};`}
+							>
 								<Picture
 									src={src}
 									alt={alt}
 									formats={['avif', 'webp']}
 									fallbackFormat="webp"
 									widths={[400, 800, 1200]}
-									sizes={kind === 'land' ? '(min-width: 720px) 40vw, 92vw' : '(min-width: 720px) 22vw, 46vw'}
+									sizes={src.width >= src.height ? '(min-width: 720px) 40vw, 92vw' : '(min-width: 720px) 22vw, 46vw'}
 								/>
 							</figure>
 						))}
@@ -97,6 +84,7 @@ const rows = [
 
 	.tile {
 		position: relative;
+		aspect-ratio: var(--ar);
 		margin: 0;
 		overflow: hidden;
 		border-radius: var(--radius-sm);
@@ -105,13 +93,10 @@ const rows = [
 
 	.tile-land {
 		grid-column: span 2;
-		aspect-ratio: 3 / 2;
-		--weight: 1.5;
+
 	}
 
 	.tile-port {
-		aspect-ratio: 2 / 3;
-		--weight: 0.6667;
 	}
 
 	.tile :global(picture),
@@ -149,7 +134,7 @@ const rows = [
 		}
 
 		.tile {
-			flex: var(--weight) 1 0;
+			flex: var(--ar) 1 0;
 			min-width: 0;
 		}
 
