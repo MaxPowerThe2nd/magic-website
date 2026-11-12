@@ -91,18 +91,16 @@ const links = allLinks.filter((link) => sections.testimonials || link.href !== '
 </script>
 
 <style>
-	/* Opaque light header, so scrolled content never shows behind logo and nav */
+	/* Dark header with a hairline in the accent; the blur keeps scrolled content from fighting with logo and nav */
 	.navbar {
 		position: fixed;
 		inset: 0 0 auto;
 		z-index: 10;
 		color: var(--color-header-text);
 		background: var(--color-header-bg);
-	}
-
-	/* Focus ring in navy, the light accent would vanish on the light header */
-	.navbar :focus-visible {
-		outline-color: var(--color-header-text);
+		border-bottom: 1px solid var(--color-border);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
 	}
 
 	.navbar-inner {
@@ -221,7 +219,7 @@ const links = allLinks.filter((link) => sections.testimonials || link.href !== '
 		transition: text-decoration-color var(--duration-fast);
 	}
 
-	/* Hover and active item: fine navy underline */
+	/* Hover and active item: fine underline in the text colour */
 	.menu a:hover,
 	.menu a:focus-visible,
 	.menu a[aria-current] {
@@ -239,7 +237,9 @@ const links = allLinks.filter((link) => sections.testimonials || link.href !== '
 			display: none;
 			position: absolute;
 			inset: 100% 0 auto;
-			background: var(--color-header-bg);
+			/* Fully opaque, the open menu must stay readable over any section */
+			background: var(--color-navy);
+			border-bottom: 1px solid var(--color-border);
 		}
 
 		:global(.js) .is-open .menu {

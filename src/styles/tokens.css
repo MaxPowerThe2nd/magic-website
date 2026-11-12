@@ -22,8 +22,8 @@
 	--color-border: rgb(217 212 199 / 0.18);
 	--color-border-strong: rgb(217 212 199 / 0.4);
 	--color-border-subtle: rgb(217 212 199 / 0.12);
-	--color-header-bg: #e9e6df; /* light header */
-	--color-header-text: var(--color-navy);
+	--color-header-bg: rgb(11 20 38 / 0.94); /* dark navy header, slightly translucent */
+	--color-header-text: var(--color-text);
 	--color-bar-bg: rgb(11 20 38 / 0.96); /* mobile booking bar */
 	--color-overlay: rgb(11 20 38 / 0.9); /* lightbox backdrop */
 	--color-button-glass: rgb(11 20 38 / 0.6); /* round buttons over photos */
