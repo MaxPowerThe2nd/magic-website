@@ -49,6 +49,7 @@
 	/* Type scale, mobile first */
 	--text-xs: 0.8125rem;
 	--text-sm: 0.9375rem;
+	--text-eyebrow: 0.9375rem; /* kicker above section headings */
 	--text-base: 1.0625rem;
 	--text-lead-min: 1.25rem; /* smallest size allowed for the display font */
 	--text-lead: 1.3125rem;
@@ -72,6 +73,7 @@
 	--weight-body: 450;
 	--leading-body: 1.65;
 	--tracking-kicker: 0.15em;
+	--tracking-eyebrow: 0.22em;
 	--tracking-button: 0.12em;
 	--tracking-logo: 0.3em;
 	--tracking-interlude: 0.12em;

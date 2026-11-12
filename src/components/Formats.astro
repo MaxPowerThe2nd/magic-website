@@ -91,6 +91,20 @@ const formats = [
 		text-align: center;
 	}
 
+	.formats-head .eyebrow {
+		justify-content: center;
+	}
+
+	/* Centred kicker gets the rule on both sides */
+	.formats-head .eyebrow::after {
+		content: '';
+		flex: none;
+		width: 2rem;
+		height: 1px;
+		background: var(--color-accent);
+		opacity: 0.6;
+	}
+
 	.formats {
 		display: grid;
 		/* Column never grows beyond the available width because of long back-side text */
