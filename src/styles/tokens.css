@@ -17,8 +17,8 @@
 	--color-navy: #0b1426;
 	--color-on-accent: var(--color-navy);
 	--color-text: #e9e6df;
-	--color-text-muted: rgb(233 230 223 / 0.75);
-	--color-text-faint: rgb(233 230 223 / 0.62);
+	--color-text-muted: rgb(233 230 223 / 0.88);
+	--color-text-faint: rgb(233 230 223 / 0.76);
 	--color-border: rgb(217 212 199 / 0.18);
 	--color-border-strong: rgb(217 212 199 / 0.4);
 	--color-border-subtle: rgb(217 212 199 / 0.12);
@@ -68,6 +68,8 @@
 	/* Cormorant needs some weight to hold its own on the dark background */
 	--weight-display: 600;
 	--weight-display-light: 500;
+	/* Jost is a variable font: a touch above regular holds up better on the dark background */
+	--weight-body: 450;
 	--leading-body: 1.65;
 	--tracking-kicker: 0.15em;
 	--tracking-button: 0.12em;
