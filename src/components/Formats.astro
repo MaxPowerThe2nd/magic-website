@@ -36,8 +36,10 @@ const formats = [
 
 <section class="section" id="formate">
 	<div class="section-inner">
-		<p class="eyebrow">Formate</p>
-		<h2 class="section-title">Zwei Formate, ein Ziel: Staunen</h2>
+		<header class="formats-head">
+			<p class="eyebrow">Formate</p>
+			<h2 class="section-title">Zwei Formate, ein Ziel: Staunen</h2>
+		</header>
 
 		<div class="formats">
 			{
@@ -84,6 +86,11 @@ const formats = [
 </section>
 
 <style>
+	/* Centred, like the two cards below it, so heading and cards share one axis */
+	.formats-head {
+		text-align: center;
+	}
+
 	.formats {
 		display: grid;
 		/* Column never grows beyond the available width because of long back-side text */
