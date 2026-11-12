@@ -1,9 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 128 128">
-    <path d="M50.4 78.5a75.1 75.1 0 0 0-28.5 6.9l24.2-65.7c.7-2 1.9-3.2 3.4-3.2h29c1.5 0 2.7 1.2 3.4 3.2l24.2 65.7s-11.6-7-28.5-7L67 45.5c-.4-1.7-1.6-2.8-2.9-2.8-1.3 0-2.5 1.1-2.9 2.7L50.4 78.5Zm-1.1 28.2Zm-4.2-20.2c-2 6.6-.6 15.8 4.2 20.2a17.5 17.5 0 0 1 .2-.7 5.5 5.5 0 0 1 5.7-4.5c2.8.1 4.3 1.5 4.7 4.7.2 1.1.2 2.3.2 3.5v.4c0 2.7.7 5.2 2.2 7.4a13 13 0 0 0 5.7 4.9v-.3l-.2-.3c-1.8-5.6-.5-9.5 4.4-12.8l1.5-1a73 73 0 0 0 3.2-2.2 16 16 0 0 0 6.8-11.4c.3-2 .1-4-.6-6l-.8.6-1.6 1a37 37 0 0 1-22.4 2.7c-5-.7-9.7-2-13.2-6.2Z" />
-    <style>
-        path { fill: #000; }
-        @media (prefers-color-scheme: dark) {
-            path { fill: #FFF; }
-        }
-    </style>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+	<defs>
+		<linearGradient id="flame" x1="0" y1="1" x2="0" y2="0">
+			<stop offset="0" stop-color="#ffb347"/>
+			<stop offset=".5" stop-color="#ff7828"/>
+			<stop offset="1" stop-color="#e5391a"/>
+		</linearGradient>
+		<radialGradient id="body" cx="50%" cy="35%" r="70%">
+			<stop offset="0" stop-color="#2f55b0"/>
+			<stop offset="1" stop-color="#10224f"/>
+		</radialGradient>
+	</defs>
+	<!-- flames rising around the chip -->
+	<path fill="url(#flame)" d="M13.93 48.69C10.41 45.94 10.77 42.87 9.79 40.12C12.23 41.89 18.57 40.50 19.76 44.81z"/>
+<path fill="url(#flame)" d="M11.28 39.79C7.02 35.17 11.16 28.99 9.83 25.07C12.78 28.09 16.05 30.15 17.72 36.21z"/>
+<path fill="url(#flame)" d="M13.22 30.62C9.59 25.39 10.68 21.31 9.95 17.19C12.49 20.63 19.75 21.56 20.47 27.88z"/>
+<path fill="url(#flame)" d="M19.26 23.59C16.18 15.99 22.31 10.30 22.12 4.89C24.31 9.93 27.36 13.90 27.24 22.10z"/>
+<path fill="url(#flame)" d="M27.75 20.50C26.05 12.40 28.95 7.90 29.80 2.50C31.07 7.90 37.95 12.40 36.25 20.50z"/>
+<path fill="url(#flame)" d="M36.76 22.10C36.64 13.90 44.42 10.81 46.20 5.70C46.41 11.19 47.82 15.99 44.74 23.59z"/>
+<path fill="url(#flame)" d="M43.53 27.88C44.25 21.56 47.75 19.22 49.93 15.64C49.57 19.90 54.41 25.39 50.78 30.62z"/>
+<path fill="url(#flame)" d="M46.28 36.21C47.95 30.15 55.39 30.41 58.01 27.20C57.00 31.30 56.98 35.17 52.72 39.79z"/>
+<path fill="url(#flame)" d="M44.24 44.81C45.43 40.50 48.40 39.65 50.55 37.68C49.86 40.62 53.59 45.94 50.07 48.69z"/>
+	<path fill="#ffe08a" d="M14.96 47.97C12.96 46.24 13.19 44.39 12.54 42.78C13.92 43.90 17.04 43.52 17.87 46.03z"/>
+<path fill="#ffe08a" d="M12.39 38.90C9.96 36.05 11.68 32.77 10.81 30.45C12.48 32.32 14.48 33.54 15.61 37.10z"/>
+<path fill="#ffe08a" d="M14.60 29.68C12.57 26.49 13.20 24.06 12.69 21.61C14.10 23.71 17.65 24.58 18.22 28.32z"/>
+<path fill="#ffe08a" d="M21.00 22.79C19.32 18.20 22.08 14.95 21.89 11.72C23.08 14.77 24.91 17.15 25.00 22.04z"/>
+<path fill="#ffe08a" d="M29.88 20.00C29.02 15.14 30.70 12.44 31.12 9.20C31.76 12.44 34.98 15.14 34.12 20.00z"/>
+<path fill="#ffe08a" d="M39.00 22.04C39.09 17.15 42.85 15.13 43.84 12.04C43.85 15.31 44.68 18.20 43.00 22.79z"/>
+<path fill="#ffe08a" d="M45.78 28.32C46.35 24.58 48.43 23.16 49.66 20.99C49.34 23.50 51.43 26.49 49.40 29.68z"/>
+<path fill="#ffe08a" d="M48.39 37.10C49.52 33.54 53.22 33.27 54.72 31.31C54.02 33.71 54.04 36.05 51.61 38.90z"/>
+<path fill="#ffe08a" d="M46.13 46.03C46.96 43.52 48.76 43.02 49.99 41.80C49.49 43.51 51.04 46.24 49.04 47.97z"/>
+	<!-- casino chip: edge spots, inner ring, plain centre -->
+	<circle cx="32" cy="38" r="19" fill="url(#body)"/>
+	<g fill="#f3efe6"><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(0 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(45 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(90 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(135 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(180 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(225 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(270 32 38)"/><rect x="28.5" y="19.5" width="7" height="6.5" rx="1.3" transform="rotate(315 32 38)"/></g>
+	<circle cx="32" cy="38" r="12.5" fill="#1f3f8f" stroke="#f3efe6" stroke-width="1.4"/>
+	<circle cx="32" cy="38" r="9" fill="none" stroke="#f3efe6" stroke-width="1" stroke-dasharray="2.2 2.2" opacity=".85"/>
+	<circle cx="32" cy="38" r="5.5" fill="#10224f"/>
 </svg>
