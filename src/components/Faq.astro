@@ -30,9 +30,11 @@ const questions = [
 
 <section class="section" id="faq">
 	<div class="section-inner faq">
-		<div>
+		<div class="faq-intro">
 			<p class="eyebrow">Fragen</p>
 			<h2 class="section-title">Gut zu wissen</h2>
+			<p class="faq-note">Ihre Frage ist nicht dabei? Dann schreiben Sie mir einfach, ich antworte gern.</p>
+			<a class="button" href="#kontakt">Frage stellen</a>
 		</div>
 
 		<div class="questions">
@@ -51,7 +53,19 @@ const questions = [
 <style>
 	.faq {
 		display: grid;
-		gap: 1rem;
+		gap: var(--space-6);
+	}
+
+	.faq-note {
+		max-width: 24rem;
+		margin: 0 0 var(--space-5);
+		color: var(--color-text-muted);
+	}
+
+	.faq-intro {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
 	}
 
 	.questions {
