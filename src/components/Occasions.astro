@@ -1,6 +1,28 @@
 ---
-// Quiet interlude between the style section and the formats: one sentence on two levels.
-// A single <p>, so screen readers read it as one sentence. Keeps the former "shows" anchor.
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import firmeneventsPhoto from '../images/table-hopping-audience.webp';
+import familienfeierPhoto from '../images/rope-girl-laughing.webp';
+
+const occasions: {
+	label: string;
+	kicker: string;
+	image: ImageMetadata;
+	alt: string;
+}[] = [
+	{
+		label: 'Firmenevents',
+		kicker: 'Messen · Empfänge · Galas',
+		image: firmeneventsPhoto,
+		alt: 'Reinhard Hütter beim Table Hopping, Gäste schauen gespannt zu',
+	},
+	{
+		label: 'Privatfeiern',
+		kicker: 'Familienfeiern · Geburtstage',
+		image: familienfeierPhoto,
+		alt: 'Ein Mädchen lacht bei einer Seilnummer von Reinhard Hütter, im Hintergrund staunende Gäste',
+	},
+];
 ---
 
 <section class="section occasions" id="shows" aria-label="Anlässe">
@@ -16,6 +38,31 @@
 				>
 			</span>
 		</p>
+
+		<ul class="occasion-stage">
+			{
+				occasions.map(({ label, kicker, image, alt }) => (
+					<li class="occasion-panel">
+						<div class="occasion-photos">
+							<figure class="occasion-hero">
+								<Picture
+									src={image}
+									alt={alt}
+									formats={['avif', 'webp']}
+									fallbackFormat="webp"
+									widths={[400, 800, 1200]}
+									sizes="(min-width: 720px) 46vw, 92vw"
+								/>
+							</figure>
+						</div>
+						<div class="occasion-caption">
+							<p class="occasion-label">{label}</p>
+							<p class="occasion-kicker">{kicker}</p>
+						</div>
+					</li>
+				))
+			}
+		</ul>
 	</div>
 </section>
 
@@ -29,7 +76,6 @@
 		text-align: center;
 	}
 
-	/* Upper level: small caps line in the accent colour; may wrap on narrow phones */
 	.occasions-list {
 		text-wrap: balance;
 		font-family: var(--font-body);
@@ -44,7 +90,6 @@
 		white-space: pre;
 	}
 
-	/* Lower level: the punchline */
 	.occasions-punch {
 		font-family: var(--font-display);
 		font-size: var(--text-interlude);
@@ -53,9 +98,65 @@
 		color: var(--color-text);
 	}
 
-	/* Phones: line break after "Scheidungen." */
 	.punch-part {
 		display: block;
+	}
+
+	.occasion-stage {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: var(--space-3);
+		margin: var(--space-6) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.occasion-panel {
+		margin: 0;
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	.occasion-photos {
+		position: relative;
+	}
+
+	.occasion-hero {
+		margin: 0;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: var(--color-surface);
+		aspect-ratio: 3 / 2;
+	}
+
+	.occasion-hero :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.occasion-caption {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: var(--space-2) var(--space-4);
+	}
+
+	.occasion-label {
+		margin: 0;
+		font-family: var(--font-body);
+		font-size: var(--text-xs);
+		font-weight: 500;
+		letter-spacing: var(--tracking-kicker);
+		text-transform: uppercase;
+		color: var(--color-accent);
+	}
+
+	.occasion-kicker {
+		margin: 0;
+		font-size: var(--text-xs);
+		color: var(--color-text-faint);
 	}
 
 	@media (min-width: 720px) {
@@ -69,7 +170,6 @@
 			gap: var(--space-4);
 		}
 
-		/* Fine hairlines left and right of the upper line */
 		.occasions-list::before,
 		.occasions-list::after {
 			content: '';
@@ -77,5 +177,11 @@
 			height: 1px;
 			background: var(--color-border-strong);
 		}
+
+		.occasion-stage {
+			grid-template-columns: 1fr 1fr;
+			gap: var(--space-3);
+		}
+
 	}
 </style>

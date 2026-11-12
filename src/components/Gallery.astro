@@ -1,163 +1,185 @@
 ---
 import { Picture } from 'astro:assets';
-import cardsStageChild from '../images/cards-stage-child.webp';
-import ropeMagicStage from '../images/rope-magic-stage.webp';
+import drawingRevealPointing from '../images/drawing-reveal-pointing.webp';
+import tableHoppingAudience from '../images/table-hopping-audience.webp';
+import standingTableGuest from '../images/standing-table-guest.webp';
+import cardHandoverHands from '../images/card-handover-hands.webp';
+import magicianConcentrating from '../images/magician-concentrating.webp';
+import magicianSmilingStanding from '../images/magician-smiling-standing.webp';
+import ropeGirlLaughing from '../images/rope-girl-laughing.webp';
+import ropeBoyLaughing from '../images/rope-boy-laughing.webp';
+import dollarSignGuest from '../images/dollar-sign-guest.webp';
+import scarfTrickGuests from '../images/scarf-trick-guests.webp';
+import cupsAndBallsSmile from '../images/cups-and-balls-smile.webp';
+import cardRedCircle from '../images/card-red-circle.webp';
 
-// Photos from src/images; add more entries here to fill the slider.
-// No visible text: the photos speak for themselves. The alt text stays for screen readers.
-const photos = [
-	{
-		src: cardsStageChild,
-		alt: 'Reinhard Hütter zeigt einem jungen Zuschauer auf der Bühne ein Kartenkunststück',
-	},
-	{
-		src: ropeMagicStage,
-		alt: 'Reinhard Hütter bei einer Seilnummer vor rot und blau beleuchtetem Bühnenvorhang',
-	},
+// Justified rows: every row spreads its photos over the full width at one common height.
+// Each tile's flex weight equals its aspect ratio, so heights match exactly and no gaps can appear.
+// `land` = landscape (3:2), `port` = portrait (2:3). Row mix: 2 landscape, 4 portrait, 2 x (landscape, portrait, landscape).
+const L = 'land';
+const P = 'port';
+const rows = [
+	[
+		{ src: drawingRevealPointing, alt: 'Reinhard Hütter zeigt einem Gast eine Zeichnung mit rotem Kreis', kind: L },
+		{ src: tableHoppingAudience, alt: 'Reinhard Hütter beim Table Hopping, Gäste schauen gespannt zu', kind: L },
+	],
+	[
+		{ src: standingTableGuest, alt: 'Reinhard Hütter zeigt einem Gast am Stehtisch einen Kartenkunststück', kind: P },
+		{ src: cardHandoverHands, alt: 'Hände übergeben Spielkarten bei einem Kartenkunststück', kind: P },
+		{ src: magicianConcentrating, alt: 'Reinhard Hütter konzentriert bei einem Kunststück', kind: P },
+		{ src: magicianSmilingStanding, alt: 'Reinhard Hütter lächelnd am Stehtisch', kind: P },
+	],
+	[
+		{ src: ropeGirlLaughing, alt: 'Ein Mädchen lacht bei einer Seilnummer, im Hintergrund staunende Gäste', kind: L },
+		{ src: cupsAndBallsSmile, alt: 'Reinhard Hütter lächelt bei einem Becherspiel am Tisch', kind: P },
+		{ src: ropeBoyLaughing, alt: 'Ein Junge lacht begeistert bei einer Seilnummer', kind: L },
+	],
+	[
+		{ src: dollarSignGuest, alt: 'Reinhard Hütter mit einem Gast und einem Dollarzeichen', kind: L },
+		{ src: cardRedCircle, alt: 'Reinhard Hütter zeigt eine Karte mit rotem Kreis', kind: P },
+		{ src: scarfTrickGuests, alt: 'Reinhard Hütter mit Tuch und zwei Gästen', kind: L },
+	],
 ];
 ---
 
-<section class="section" id="fotos">
+<section class="section gallery-section" id="fotos">
 	<div class="section-inner">
-		<!-- Heading only for screen readers and the page outline -->
-		<h2 class="visually-hidden">Fotos &amp; Videos</h2>
+		<header class="gallery-intro">
+			<p class="eyebrow">Momente</p>
+			<h2 class="section-title">Nah dran. Echt. Unvergesslich.</h2>
+		</header>
 
-		<!-- Effect module "slider": a horizontal row with scroll snapping. Touch devices swipe,
-		     devices with a mouse get arrow buttons (JS). Without JS the row simply scrolls sideways. -->
-		<div class="slider" data-effect="slider">
-			<ul class="slider-track" id="photo-slider" tabindex="0" aria-label="Fotos">
-				{
-					photos.map(({ src, alt }) => (
-						<li class="slide">
-							<Picture
-								src={src}
-								alt={alt}
-								formats={['avif', 'webp']}
-								fallbackFormat="webp"
-								widths={[400, 800, 1200]}
-								sizes="(min-width: 960px) 760px, 78vw"
-							/>
-						</li>
-					))
-				}
-			</ul>
-
-			<div class="slider-controls">
-				<button class="slider-button" type="button" aria-controls="photo-slider" data-slider-prev>
-					<span aria-hidden="true">←</span>
-					<span class="visually-hidden">Vorheriges Foto</span>
-				</button>
-				<button class="slider-button" type="button" aria-controls="photo-slider" data-slider-next>
-					<span aria-hidden="true">→</span>
-					<span class="visually-hidden">Nächstes Foto</span>
-				</button>
-			</div>
+		<div class="photo-mosaic" role="list" aria-label="Fotos vom Auftritt">
+			{
+				rows.map((row) => (
+					<div class="mosaic-row" role="presentation">
+						{row.map(({ src, alt, kind }) => (
+							<figure class={`tile tile-${kind}`} role="listitem">
+								<Picture
+									src={src}
+									alt={alt}
+									formats={['avif', 'webp']}
+									fallbackFormat="webp"
+									widths={[400, 800, 1200]}
+									sizes={kind === 'land' ? '(min-width: 720px) 40vw, 92vw' : '(min-width: 720px) 22vw, 46vw'}
+								/>
+							</figure>
+						))}
+					</div>
+				))
+			}
 		</div>
 	</div>
 </section>
 
 <style>
-	.slider {
-		/* Height of the photos; their width follows each photo's own proportions */
-		--slide-height: clamp(20rem, 60vh, 26rem);
+	.gallery-intro {
+		margin-bottom: var(--space-5);
+		max-width: 28rem;
 	}
 
-	.slider-track {
-		display: flex;
-		gap: var(--space-4);
+	.gallery-intro .section-title {
 		margin: 0;
-		padding: 0;
-		list-style: none;
-		overflow-x: auto;
-		overscroll-behavior-x: contain;
-		scroll-snap-type: x mandatory;
-		scrollbar-width: none;
 	}
 
-	.slider-track::-webkit-scrollbar {
-		display: none;
-	}
-
-	.slider-track:focus-visible {
-		outline-offset: 4px;
-	}
-
-	.slide {
-		flex: none;
-		scroll-snap-align: start;
-		/* One swipe moves exactly one photo */
-		scroll-snap-stop: always;
-	}
-
-	.slide :global(img) {
-		width: auto;
-		height: var(--slide-height);
-		/* Wide photos never take more than most of the screen, so the next one peeks in */
-		max-width: 78vw;
-		object-fit: cover;
-		border-radius: var(--radius);
-	}
-
-	/* Arrow buttons only with JS */
-	.slider-controls {
-		display: none;
-		justify-content: flex-end;
-		gap: var(--space-3);
-		margin-top: var(--space-4);
-	}
-
-	.slider:global(.is-ready) .slider-controls {
-		display: flex;
-	}
-
-	/* Touch devices: just swipe left and right, no arrow buttons */
-	@media (hover: none) and (pointer: coarse) {
-		.slider:global(.is-ready) .slider-controls {
-			display: none;
-		}
-	}
-
-	.slider-button {
+	/* Mobile: two-column grid, landscape photos span both columns, portrait photos pair up */
+	.photo-mosaic {
+		--seam: var(--space-2);
 		display: grid;
-		place-items: center;
-		width: var(--tap-target);
-		height: var(--tap-target);
-		padding: 0;
-		border: 1px solid var(--color-border-strong);
-		border-radius: 50%;
-		font-size: var(--text-lead);
-		line-height: 1;
-		color: var(--color-accent);
-		background: none;
-		cursor: pointer;
-		transition:
-			border-color var(--duration-fast),
-			opacity var(--duration-fast);
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-auto-flow: dense;
+		gap: var(--seam);
 	}
 
-	.slider-button:hover,
-	.slider-button:focus-visible {
-		border-color: var(--color-accent);
+	.mosaic-row {
+		display: contents;
 	}
 
-	.slider-button:disabled {
-		opacity: 0.35;
-		cursor: default;
+	.tile {
+		position: relative;
+		margin: 0;
+		overflow: hidden;
+		border-radius: var(--radius-sm);
+		background: var(--color-surface);
 	}
 
+	.tile-land {
+		grid-column: span 2;
+		aspect-ratio: 3 / 2;
+		--weight: 1.5;
+	}
+
+	.tile-port {
+		aspect-ratio: 2 / 3;
+		--weight: 0.6667;
+	}
+
+	.tile :global(picture),
+	.tile :global(img) {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	/* hairline frame and soft navy vignette tie the photos into the page colours */
+	.tile::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		box-shadow: inset 0 0 0 1px var(--color-border);
+		background: linear-gradient(to top, rgb(11 20 38 / 0.3), transparent 40%);
+		pointer-events: none;
+	}
+
+	/* Tablet and desktop: rows of equal height, widths proportional to aspect ratio */
 	@media (min-width: 720px) {
-		.slider {
-			--slide-height: clamp(24rem, 62vh, 35rem);
+		.photo-mosaic {
+			display: flex;
+			flex-direction: column;
 		}
 
-		.slide :global(img) {
-			max-width: 70vw;
+		.mosaic-row {
+			display: flex;
+			gap: var(--seam);
+			align-items: flex-start;
+		}
+
+		.tile {
+			flex: var(--weight) 1 0;
+			min-width: 0;
+		}
+
+		.tile-land,
+		.tile-port {
+			grid-column: auto;
 		}
 	}
 
-	@media (prefers-reduced-motion: reduce) {
-		.slider-button {
-			transition: none;
+	@media (min-width: 960px) {
+		.gallery-intro {
+			margin-bottom: var(--space-6);
+		}
+
+		.photo-mosaic {
+			--seam: var(--space-3);
+		}
+
+		.tile {
+			border-radius: var(--radius);
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.tile :global(img) {
+			transition: transform var(--duration-slow) var(--ease-out);
+		}
+
+		.tile:hover :global(img) {
+			transform: scale(1.04);
 		}
 	}
 </style>
