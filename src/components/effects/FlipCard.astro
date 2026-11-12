@@ -54,11 +54,10 @@ const { id, openLabel = 'Details ansehen', closeLabel = 'Zurück' } = Astro.prop
 	.flip-face {
 		display: flex;
 		flex-direction: column;
-		/* Playing card proportions and rounded corners. The explicit width keeps long back-side
-		   text from widening the card through the aspect ratio; the card grows in height instead. */
+		/* Rounded card corners. The height follows the front (photo and caption); the back stretches to
+		   the same height and grows the card if its text needs more room. */
 		width: 100%;
 		min-width: 0;
-		aspect-ratio: 5 / 7;
 		border-radius: var(--radius);
 		box-shadow: var(--shadow-card);
 	}
@@ -66,7 +65,7 @@ const { id, openLabel = 'Details ansehen', closeLabel = 'Zurück' } = Astro.prop
 	/* Front: cream card paper with navy print */
 	.flip-front {
 		position: relative;
-		padding: var(--space-5);
+		padding: var(--space-3);
 		background: var(--color-text);
 		color: var(--color-navy);
 	}

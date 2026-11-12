@@ -1,17 +1,20 @@
 ---
+import { Picture } from 'astro:assets';
 import FlipCard from './effects/FlipCard.astro';
+import standingTableGuest from '../images/standing-table-guest.webp';
+import magicianSmilingStanding from '../images/magician-smiling-standing.webp';
 
-// Numbers are not known yet and must not be invented: [TODO: …] placeholders
+// Only facts that are known are shown; rows without content are left out instead of using placeholders.
 const formats = [
 	{
 		id: 'format-table',
 		suit: '♠',
 		title: 'Tischzauberei',
 		subtitle: 'Close-up / Table Hopping',
+		photo: standingTableGuest,
+		alt: 'Reinhard Hütter zeigt einem Gast am Stehtisch einen Kartenkunststück',
 		details: [
 			['Ablauf', 'Ich gehe von Tisch zu Tisch und zeige Zauberkunst direkt in den Händen Ihrer Gäste.'],
-			['Dauer', '[TODO: Dauer]'],
-			['Gästeanzahl', '[TODO: Gästeanzahl]'],
 			['Platzbedarf', 'Keine Bühne nötig, ich komme zu Ihren Gästen.'],
 			['Passender Moment', 'Beim Empfang und als Dinner Magic – ideal zwischen den Gängen.'],
 		],
@@ -21,13 +24,9 @@ const formats = [
 		suit: '♥',
 		title: 'Salon-Show',
 		subtitle: 'Show für die ganze Gruppe',
-		details: [
-			['Ablauf', 'Eine Show für die ganze Gruppe im Sitzen. Keine Bühne nötig.'],
-			['Dauer', '[TODO: Dauer]'],
-			['Gästeanzahl', '[TODO: Gästeanzahl]'],
-			['Platzbedarf', '[TODO: Platzbedarf]'],
-			['Passender Moment', '[TODO: passender Moment]'],
-		],
+		photo: magicianSmilingStanding,
+		alt: 'Reinhard Hütter lächelnd vor seinem Publikum',
+		details: [['Ablauf', 'Eine Show für die ganze Gruppe im Sitzen. Keine Bühne nötig.']],
 	},
 ];
 ---
@@ -42,16 +41,23 @@ const formats = [
 				formats.map((format) => (
 					<FlipCard id={format.id}>
 						<Fragment slot="front">
-							<span class="index index-top" aria-hidden="true">
-								{format.suit}
-							</span>
-							<span class="index index-bottom" aria-hidden="true">
-								{format.suit}
-							</span>
+							<figure class="card-photo" style={`--ar: ${format.photo.width / format.photo.height};`}>
+								<Picture
+									src={format.photo}
+									alt={format.alt}
+									formats={['avif', 'webp']}
+									fallbackFormat="webp"
+									widths={[400, 800]}
+									sizes="(min-width: 720px) 336px, 92vw"
+								/>
+							</figure>
 							<div class="front-body">
 								<h3 class="card-title">{format.title}</h3>
 								<p class="card-subtitle">{format.subtitle}</p>
 							</div>
+							<span class="index index-bottom" aria-hidden="true">
+								{format.suit}
+							</span>
 						</Fragment>
 						<Fragment slot="back">
 							<h3 class="back-title">{format.title}</h3>
@@ -94,28 +100,34 @@ const formats = [
 		line-height: 1;
 	}
 
-	.index-top {
-		top: var(--space-4);
-		left: var(--space-4);
-	}
-
 	.index-bottom {
 		right: var(--space-4);
 		bottom: var(--space-4);
 		transform: rotate(180deg);
 	}
 
+	/* The photo is shown whole at its own aspect ratio, like a print on card paper */
+	.card-photo {
+		margin: 0;
+		overflow: hidden;
+		border-radius: var(--radius-sm);
+		aspect-ratio: var(--ar);
+		background: var(--color-surface);
+	}
+
+	.card-photo :global(picture),
+	.card-photo :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
 	.front-body {
-		display: flex;
-		flex: 1;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		text-align: center;
+		padding: var(--space-4) 0 0;
 	}
 
 	.card-title {
-		margin: 0 0 var(--space-3);
+		margin: 0 0 var(--space-2);
 		font-size: var(--text-h2);
 		color: inherit;
 	}
