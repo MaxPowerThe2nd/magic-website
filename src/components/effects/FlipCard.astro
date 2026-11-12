@@ -125,6 +125,10 @@ const { id, openLabel = 'Details ansehen', closeLabel = 'Zurück' } = Astro.prop
 		outline-offset: 3px;
 	}
 
+	.flip-close {
+		align-self: center;
+	}
+
 	/* Buttons only make sense when the card can turn */
 	.flip:not(.is-ready) .flip-button {
 		display: none;

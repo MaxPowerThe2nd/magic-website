@@ -26,7 +26,10 @@ const formats = [
 		subtitle: 'Show für die ganze Gruppe',
 		photo: magicianSmilingStanding,
 		alt: 'Reinhard Hütter lächelnd vor seinem Publikum',
-		details: [['Ablauf', 'Eine Show für die ganze Gruppe im Sitzen. Keine Bühne nötig.']],
+		details: [
+			['Ablauf', 'Eine Show für die ganze Gruppe, bequem im Sitzen.'],
+			['Platzbedarf', 'Keine Bühne nötig.'],
+		],
 	},
 ];
 ---
@@ -60,16 +63,19 @@ const formats = [
 							</span>
 						</Fragment>
 						<Fragment slot="back">
-							<h3 class="back-title">{format.title}</h3>
-							<dl class="details">
-								{format.details.map(([term, text]) => (
-									<div>
-										<dt>{term}</dt>
-										<dd>{text}</dd>
-									</div>
-								))}
-							</dl>
-						</Fragment>
+								<span class="back-suit" aria-hidden="true">
+									{format.suit}
+								</span>
+								<h3 class="back-title">{format.title}</h3>
+								<dl class="details">
+									{format.details.map(([term, text]) => (
+										<div>
+											<dt>{term}</dt>
+											<dd>{text}</dd>
+										</div>
+									))}
+								</dl>
+							</Fragment>
 					</FlipCard>
 				))
 			}
@@ -140,17 +146,42 @@ const formats = [
 		text-transform: uppercase;
 	}
 
+	/* Back side: centred like a card face, text spread over the full height */
+	.back-suit {
+		display: block;
+		text-align: center;
+		font-family: var(--font-display);
+		font-size: 2.5rem;
+		line-height: 1;
+		color: var(--color-accent);
+	}
+
 	.back-title {
-		margin: 0 0 var(--space-4);
-		font-size: var(--text-h3);
+		margin: var(--space-2) 0 var(--space-5);
+		text-align: center;
+		font-size: var(--text-h2);
 	}
 
 	.details {
-		display: grid;
-		gap: var(--space-3);
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		justify-content: space-evenly;
+		gap: var(--space-5);
 		margin: 0 0 var(--space-4);
-		font-size: var(--text-sm);
-		line-height: 1.5;
+		text-align: center;
+	}
+
+	.details > div {
+		display: grid;
+		justify-items: center;
+		gap: var(--space-2);
+	}
+
+	.details > div + div {
+		padding-top: var(--space-5);
+		border-top: 1px solid var(--color-border);
+		align-self: stretch;
 	}
 
 	dt {
@@ -162,6 +193,9 @@ const formats = [
 
 	dd {
 		margin: 0;
-		color: var(--color-text-muted);
+		font-family: var(--font-display);
+		font-size: var(--text-lead);
+		line-height: 1.4;
+		color: var(--color-text);
 	}
 </style>
